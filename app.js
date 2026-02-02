@@ -171,7 +171,7 @@ function updateQuantity(change) {
   qtyElement.textContent = current;
 }
 
-function addCurrentProductToCart() {
+function addCurrentProductToCart(event) {
   if (!currentProduct) return;
   
   const qty = parseInt(document.getElementById('product-qty')?.textContent) || 1;
@@ -190,6 +190,9 @@ function addCurrentProductToCart() {
   // Update cart totals
   updateCartTotals();
   updateCartBadge();
+  
+  // 🔥 ΚΑΛΕΣΕ ΤΟ ANIMATION ΜΕ ΤΟ EVENT 🔥
+  flyToCart(event);
   
   // Show success
   alert(`✅ Προστέθηκαν ${qty} τεμ. στο καλάθι!`);
