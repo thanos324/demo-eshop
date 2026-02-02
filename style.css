@@ -379,3 +379,46 @@ footer {
   border-radius: 50%;
   animation: flyToCart 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5);
 }
+/* =============== AUTH POPUP STYLES =============== */
+.cart-popup input {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.cart-popup input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(224, 122, 95, 0.1);
+}
+
+.cart-popup button {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.cart-popup button:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.cart-popup a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.cart-popup a:hover {
+  text-decoration: underline;
+}
