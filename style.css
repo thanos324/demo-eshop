@@ -1,5 +1,4 @@
-/* =============== ΑΠΛΟΠΟΙΗΜΕΝΟ CSS (350 ΓΡΑΜΜΕΣ) =============== */
-
+/* =============== KEEP THESE/* =============== KEEP THESE - ESSENTIAL TAUTOTITA =============== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
@@ -18,7 +17,7 @@ body {
   background: linear-gradient(135deg, #f7f3ee, #f0efeb);
 }
 
-/* =============== HEADER (ΚΑΘΑΡΟ) =============== */
+/* =============== HEADER (ΚΡΑΤΑ ΤΟ) =============== */
 header {
   position: sticky;
   top: 0;
@@ -37,6 +36,11 @@ header h1 {
   font-weight: 300;
   letter-spacing: 6px;
   text-transform: uppercase;
+}
+
+nav {
+  display: flex;
+  gap: 12px;
 }
 
 nav a {
@@ -64,7 +68,7 @@ nav a:hover {
   transform: translateY(-1px);
 }
 
-/* =============== HERO (ΧΩΡΙΣ ΔΙΠΛΟΤΥΠΑ) =============== */
+/* =============== HERO (ΚΡΑΤΑ ΤΟ ΑΚΕΡΑΙΟ) =============== */
 .hero {
   max-width: 1100px;
   margin: 80px auto;
@@ -100,7 +104,7 @@ nav a:hover {
   margin-bottom: 30px;
 }
 
-/* ΚΟΥΜΠΙΑ - ΜΙΑ ΚΑΝΟΝΙΚΗ ΚΛΑΣΗ */
+/* =============== HERO BUTTONS WITH INDIVIDUAL HOVER COLORS =============== */
 .hero-btn {
   padding: 15px 23px;
   border-radius: 999px;
@@ -111,11 +115,33 @@ nav a:hover {
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 8px 20px rgb(253, 173, 127);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
   transition: all 0.3s ease;
 }
 
-.hero-btn:hover {
-  background: #ffc558;
+/* Register button (btn-register) - Blue hover */
+.btn-register:hover {
+  background: #ffc558; /* Blue color */
+  border-color: #ffc558;
+  box-shadow: 0 12px 28px #ffc558;
+  outline: 3px solid #ffc558;
+  transform: translateY(-1px);
+}
+
+/* Login button (btn-continue) - Green hover */
+.btn-continue:hover {
+  background: #ffc558; /* Green color */
+  border-color: #ffc558;
+  box-shadow: 0 12px 28px #ffc558;
+  outline: 3px solid #ffc558;
+  transform: translateY(-1px);
+}
+
+/* Products button (btn-products) - Keep original orange hover */
+.btn-products:hover {
+  background: #ffc558; /* Original orange */
   border-color: #ffc558;
   box-shadow: 0 12px 28px #ffc558;
   outline: 3px solid #ffc558;
@@ -140,9 +166,11 @@ nav a:hover {
   width: 100%;
   display: block;
   object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 0.6s ease;
 }
 
-/* =============== PRODUCTS (ΑΠΛΟΠΟΙΗΜΕΝΟ) =============== */
+/* =============== PRODUCTS (ΚΡΑΤΑ ΤΟ DESIGN) =============== */
 .products-section {
   max-width: 1200px;
   margin: 40px auto 120px;
@@ -160,6 +188,20 @@ nav a:hover {
   letter-spacing: 2.5px;
   color: #222222;
   margin-bottom: 12px;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 15px;
+}
+
+.products-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
 }
 
 #products-grid {
@@ -168,6 +210,7 @@ nav a:hover {
   gap: 30px;
 }
 
+/* PRODUCT CARD (ΚΡΑΤΑ ΤΟ ΑΚΕΡΑΙΟ) */
 .product-card {
   background: var(--card-bg);
   border-radius: 12px;
@@ -179,14 +222,17 @@ nav a:hover {
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.01);
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
 .product-card img {
   width: 100%;
   height: 320px;
   object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .product-card h3 {
@@ -203,9 +249,33 @@ nav a:hover {
   font-weight: 700;
   font-size: 17px;
   color: var(--accent);
+  letter-spacing: 0.8px;
 }
 
-/* ΚΟΥΜΠΙΑ ΦΙΛΤΡΑ */
+/* PREMIUM TITLE UNDERLINE (ΚΡΑΤΑ ΤΟ) */
+.product-card h3 {
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.product-card h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 32%;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  opacity: 0.8;
+  transition: width 0.3s ease;
+}
+
+.product-card:hover h3::after {
+  width: 60%;
+}
+/*koympia filtra mplouzes pantelonia klp*/
+/* =============== STYLISH FILTER BUTTONS =============== */
 .product-filters {
   display: flex;
   justify-content: center;
@@ -216,7 +286,7 @@ nav a:hover {
 
 .filter-btn {
   padding: 12px 30px;
-  border-radius: 50px;
+  border-radius: 50px; /* Makes it fully rounded (circle shape) */
   border: 2px solid var(--accent);
   background: white;
   color: var(--accent);
@@ -231,15 +301,35 @@ nav a:hover {
   box-shadow: 0 4px 12px rgba(224, 122, 95, 0.1);
 }
 
-.filter-btn:hover,
-.filter-btn.active {
+.filter-btn:hover {
   background: var(--accent);
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(224, 122, 95, 0.25);
+  border-color: var(--accent);
 }
 
-/* =============== POPUPS (ΚΟΙΝΗ ΣΤΥΛΙΣΤΙΚΗ) =============== */
+.filter-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 6px 16px rgba(224, 122, 95, 0.3);
+  position: relative;
+}
+
+.filter-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+/* =============== BASIC POPUP STYLES =============== */
 .cart-overlay {
   position: fixed;
   top: 0;
@@ -251,7 +341,7 @@ nav a:hover {
   opacity: 0;
   visibility: hidden;
   z-index: 1000;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .cart-overlay.active {
@@ -285,23 +375,127 @@ nav a:hover {
   transform: translate(-50%, -50%) scale(1);
 }
 
-.cart-popup-header {
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  border-bottom: 1px solid rgba(224, 122, 95, 0.15);
-  padding: 25px 30px;
-  position: relative;
-}
 
-.cart-popup-header h3 {
-  color: #333;
-  font-size: 20px;
+/*denjkserw*/
+/* =============== STYLISH CART CHECKOUT BUTTON =============== */
+.cart-checkout {
+  width: 100%;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 6px 20px rgba(224, 122, 95, 0.3);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
 }
 
-.cart-close {
+.cart-checkout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.7s ease;
+  z-index: -1;
+}
+
+.cart-checkout:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(224, 122, 95, 0.4);
+  background: linear-gradient(135deg, var(--accent-dark) 0%, #d65f3f 100%);
+}
+
+.cart-checkout:hover::before {
+  left: 100%;
+}
+
+.cart-checkout:active {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(224, 122, 95, 0.35);
+}
+
+.cart-checkout i {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.cart-checkout:hover i {
+  transform: scale(1.1);
+}
+
+/* Cart popup footer styling */
+.cart-popup-footer {
+  padding: 20px 30px;
+  border-top: 1px solid rgba(224, 122, 95, 0.15);
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* Cart total styling */
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  background: white;
+  border-radius: 16px;
+  border: 2px solid rgba(224, 122, 95, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.cart-total span:first-child {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.total-amount {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 2px 4px rgba(224, 122, 95, 0.1);
+}
+
+/* Empty cart state */
+.cart-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.cart-empty i {
+  font-size: 64px;
+  opacity: 0.3;
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+.cart-empty p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+
+
+
+
+/* =============== STYLISH AUTH POPUPS =============== */
+/* Style all popup close buttons */
+.cart-popup .cart-close {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -314,19 +508,48 @@ nav a:hover {
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 18px;
+  box-shadow: 0 4px 12px rgba(224, 122, 95, 0.1);
   position: absolute;
   top: 20px;
   right: 20px;
+  z-index: 10;
 }
 
-.cart-close:hover {
+.cart-popup .cart-close:hover {
   background: var(--accent);
   color: white;
   transform: rotate(90deg);
+  box-shadow: 0 6px 20px rgba(224, 122, 95, 0.25);
 }
 
-/* ΚΟΙΝΟ INPUT STYLE */
-.cart-popup input {
+/* Auth popup specific styling */
+.cart-popup .cart-popup-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 1px solid rgba(224, 122, 95, 0.15);
+  padding: 25px 30px;
+  position: relative;
+  min-height: 80px;
+}
+
+.cart-popup .cart-popup-header h3 {
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.cart-popup .cart-popup-header h3 i {
+  color: var(--accent);
+}
+
+/* Auth form styling */
+.cart-popup input[type="text"],
+.cart-popup input[type="password"],
+.cart-popup input[type="email"],
+.cart-popup input[type="tel"] {
   width: 100%;
   padding: 14px 16px;
   margin-bottom: 15px;
@@ -335,17 +558,30 @@ nav a:hover {
   font-size: 15px;
   transition: all 0.3s ease;
   background: #f9f9f9;
+  color: #333;
+  
 }
 
-.cart-popup input:focus {
+.cart-popup input[type="text"]:focus,
+.cart-popup input[type="password"]:focus,
+.cart-popup input[type="email"]:focus,
+.cart-popup input[type="tel"]:focus {
   outline: none;
   border-color: var(--accent);
   background: white;
   box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1);
 }
 
-/* ΚΟΙΝΟ ΚΟΥΜΠΙ */
-.cart-popup button {
+.cart-popup input[type="text"]::placeholder,
+.cart-popup input[type="password"]::placeholder,
+.cart-popup input[type="email"]::placeholder,
+.cart-popup input[type="tel"]::placeholder {
+  color: #888;
+}
+
+/* Auth buttons */
+.cart-popup button[onclick*="handleLogin"],
+.cart-popup button[onclick*="handleRegister"] {
   width: 100%;
   padding: 16px;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
@@ -357,52 +593,234 @@ nav a:hover {
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 10px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(224, 122, 95, 0.25);
 }
 
-.cart-popup button:hover {
+
+
+
+
+
+
+.cart-popup button[onclick*="handleLogin"]:hover,
+.cart-popup button[onclick*="handleRegister"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(224, 122, 95, 0.35);
+  background: linear-gradient(135deg, var(--accent-dark) 0%, #d65f3f 100%);
 }
 
-.cart-checkout {
+/* Links in auth forms */
+.cart-popup a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-bottom: 1px dotted transparent;
+}
+
+.cart-popup a:hover {
+  color: var(--accent-dark);
+  border-bottom-color: var(--accent);
+}
+
+/* Form container padding */
+.cart-popup > div[style*="padding: 30px"] {
+  padding: 30px !important;
+}
+
+/* Center text in auth forms */
+.cart-popup p[style*="text-align: center"] {
+  margin-top: 25px !important;
+  color: #666 !important;
+  font-size: 14px !important;
+}
+
+/* Auth popup animation */
+.cart-popup {
+  animation: popupFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+
+
+
+/* =============== STYLISH AUTH POPUPS =============== */
+/* Style all popup close buttons */
+.cart-popup .cart-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(224, 122, 95, 0.1);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.cart-popup .cart-close:hover {
+  background: var(--accent);
+  color: white;
+  transform: rotate(90deg);
+  box-shadow: 0 6px 20px rgba(224, 122, 95, 0.25);
+}
+
+/* Auth popup specific styling */
+.cart-popup .cart-popup-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 1px solid rgba(224, 122, 95, 0.15);
+  padding: 25px 30px;
+  position: relative;
+  min-height: 80px;
+}
+
+.cart-popup .cart-popup-header h3 {
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.cart-popup .cart-popup-header h3 i {
+  color: var(--accent);
+}
+
+/* Auth form styling with 20px border-radius */
+.cart-popup input[type="text"],
+.cart-popup input[type="password"],
+.cart-popup input[type="email"],
+.cart-popup input[type="tel"] {
+  width: 100%;
+  padding: 16px 20px;
+  margin-bottom: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 20px; /* Changed to 20px */
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #f9f9f9;
+  color: #333;
+}
+
+.cart-popup input[type="text"]:focus,
+.cart-popup input[type="password"]:focus,
+.cart-popup input[type="email"]:focus,
+.cart-popup input[type="tel"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.1);
+}
+
+.cart-popup input[type="text"]::placeholder,
+.cart-popup input[type="password"]::placeholder,
+.cart-popup input[type="email"]::placeholder,
+.cart-popup input[type="tel"]::placeholder {
+  color: #888;
+}
+
+/* Hover effect for inputs */
+.cart-popup input[type="text"]:hover,
+.cart-popup input[type="password"]:hover,
+.cart-popup input[type="email"]:hover,
+.cart-popup input[type="tel"]:hover {
+  border-color: #ccc;
+  background: #f5f5f5;
+}
+
+/* Auth buttons */
+.cart-popup button[onclick*="handleLogin"],
+.cart-popup button[onclick*="handleRegister"] {
+  width: 100%;
+  padding: 16px;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
   color: white;
   border: none;
-  border-radius: 20px;
-  padding: 18px 24px;
+  border-radius: 20px; /* Also 20px for consistency */
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  box-shadow: 0 6px 20px rgba(224, 122, 95, 0.3);
+  margin-top: 10px;
   letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(224, 122, 95, 0.25);
 }
 
-.cart-checkout:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px rgba(224, 122, 95, 0.4);
+.cart-popup button[onclick*="handleLogin"]:hover,
+.cart-popup button[onclick*="handleRegister"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(224, 122, 95, 0.35);
+  background: linear-gradient(135deg, var(--accent-dark) 0%, #d65f3f 100%);
 }
 
-/* =============== FLY ANIMATION (ΕΦΕ) =============== */
-.fly-animation {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  background: var(--accent);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10000;
-  animation: flyToCart 0.8s ease-out forwards;
+/* Links in auth forms */
+.cart-popup a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-bottom: 1px dotted transparent;
 }
 
-@keyframes flyToCart {
-  0% { transform: translate(0, 0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--x, 100px), var(--y, -100px)) scale(0.1); opacity: 0; }
+.cart-popup a:hover {
+  color: var(--accent-dark);
+  border-bottom-color: var(--accent);
 }
+
+/* Form container padding */
+.cart-popup > div[style*="padding: 30px"] {
+  padding: 30px !important;
+}
+
+/* Center text in auth forms */
+.cart-popup p[style*="text-align: center"] {
+  margin-top: 25px !important;
+  color: #666 !important;
+  font-size: 14px !important;
+}
+
+/* Auth popup animation */
+.cart-popup {
+  animation: popupFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+
+
+
+
+
 
 /* =============== FOOTER =============== */
 footer {
@@ -417,10 +835,16 @@ footer {
   background: rgba(255, 255, 255, 0.85);
 }
 
-/* =============== RESPONSIVE =============== */
+/* =============== RESPONSIVE (ΚΡΑΤΑ ΤΟ) =============== */
 @media (max-width: 768px) {
-  header { padding: 12px 16px; }
-  header h1 { font-size: 18px; letter-spacing: 4px; }
+  header {
+    padding: 12px 16px;
+  }
+  
+  header h1 {
+    font-size: 18px;
+    letter-spacing: 4px;
+  }
   
   .hero {
     padding: 28px 22px;
@@ -432,14 +856,259 @@ footer {
     gap: 24px;
   }
   
-  .hero-text h2 { font-size: 25px; }
-  .hero-text p { font-size: 14px; }
+  .hero-text h2 {
+    font-size: 25px;
+  }
+  
+  .hero-text p {
+    font-size: 14px;
+  }
   
   #products-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/*dokimh gpt */
+/* =============== STYLISH PRODUCT DETAILS POPUP =============== */
+#product-popup {
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  max-width: 900px !important;
+}
+
+#product-popup .cart-popup-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 1px solid rgba(224, 122, 95, 0.15);
+  padding: 20px 30px;
+}
+
+#product-popup .cart-popup-header h3 {
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#product-popup .cart-popup-header h3 i {
+  color: var(--accent);
+}
+
+/* Stylish X close button */
+#product-popup .cart-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(224, 122, 95, 0.1);
+}
+
+#product-popup .cart-close:hover {
+  background: var(--accent);
+  color: white;
+  transform: rotate(90deg);
+  box-shadow: 0 6px 20px rgba(224, 122, 95, 0.25);
+}
+
+/* Size options styling */
+#product-popup .size-option {
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  color: #555;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 60px;
+  text-align: center;
+}
+
+#product-popup .size-option:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(224, 122, 95, 0.15);
+}
+
+#product-popup .size-option.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(224, 122, 95, 0.25);
+}
+
+/* Quantity controls */
+#product-popup button[onclick*="updateQuantity"] {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: white;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+#product-popup button[onclick*="updateQuantity"]:hover {
+  background: var(--accent);
+  color: white;
+  transform: scale(1.1);
+}
+
+#product-popup #product-qty {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Add to cart button */
+#product-popup button[onclick*="addCurrentProductToCart"] {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 18px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 6px 20px rgba(224, 122, 95, 0.3);
+  letter-spacing: 0.5px;
+}
+
+#product-popup button[onclick*="addCurrentProductToCart"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(224, 122, 95, 0.4);
+  background: linear-gradient(135deg, var(--accent-dark) 0%, #d65f3f 100%);
+}
+
+/* Product image styling */
+#product-popup img {
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+#product-popup img:hover {
+  transform: scale(1.02);
+}
+
+/* Section headers */
+#product-popup h4 {
+  color: #444;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#product-popup h4::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Product name and price styling */
+#product-popup h2 {
+  color: #222;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+#product-popup h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 100%);
+  border-radius: 3px;
+}
+
+#product-popup div[style*="font-size: 28px"] {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 28px !important;
+  background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+  padding: 15px 20px;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid rgba(224, 122, 95, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Product description */
+#product-popup p[style*="color: #555"] {
+  color: #666 !important;
+  line-height: 1.7;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border-left: 4px solid var(--accent);
+}
+
+
+
+
 @media (max-width: 480px) {
-  #products-grid { grid-template-columns: 1fr; }
+  #products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============== FLY ANIMATION =============== */
+.fly-animation {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  animation: flyToCart 0.8s ease-out forwards;
+}
+
+@keyframes flyToCart {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x, 100px), var(--y, -100px)) scale(0.1);
+    opacity: 0;
+  }
 }
