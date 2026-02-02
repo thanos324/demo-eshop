@@ -7,166 +7,11 @@ const cartState = {
 
 let currentUser = null;
 let currentProduct = null;
-<<<<<<< HEAD
-let currentQuantity = 1;
-let currentSize = 'M';
-=======
->>>>>>> origin/fanti-feature
 
 // =============== INITIALIZE ===============
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🚀 ANASTASIA FASHION - Clean & Functional');
   
-<<<<<<< HEAD
-  setupEventDelegation();
-  loadUser();
-  updateCartBadge();
-});
-
-// =============== EVENT DELEGATION (ΚΕΝΤΡΙΚΟ) ===============
-function setupEventDelegation() {
-  // Κεντρικός listener για όλα τα κλικ
-  document.addEventListener('click', (e) => {
-    const target = e.target;
-    
-    // 1. Hero buttons
-    if (target.classList.contains('btn-products')) {
-      handleIntroAnimation();
-    } 
-    else if (target.classList.contains('btn-register') || target.classList.contains('btn-continue')) {
-      handleAuthButton(target);
-    }
-    
-    // 2. Filter buttons
-    else if (target.classList.contains('filter-btn')) {
-      handleFilterClick(target);
-    }
-    
-    // 3. Product cards
-    else if (target.closest('.product-card')) {
-      openProductDetails(target.closest('.product-card'));
-    }
-    
-    // 4. Cart icon
-    else if (target.closest('#cart-icon')) {
-      openCartPopup();
-    }
-    
-    // 5. Close buttons & overlay
-    else if (target.classList.contains('cart-close') || 
-             target.classList.contains('cart-overlay') ||
-             target.closest('.cart-close')) {
-      closeAllPopups();
-    }
-    
-    // 6. Product popup controls
-    else if (target.id === 'add-to-cart' || target.closest('#add-to-cart')) {
-      addCurrentProductToCart();
-    }
-    else if (target.classList.contains('size-option')) {
-      handleSizeSelection(target);
-    }
-    else if (target.id === 'qty-minus' || target.closest('#qty-minus')) {
-      updateQuantity(-1);
-    }
-    else if (target.id === 'qty-plus' || target.closest('#qty-plus')) {
-      updateQuantity(1);
-    }
-    
-    // 7. Remove from cart
-    else if (target.closest('.remove-item')) {
-      const itemId = target.closest('.remove-item').dataset.id;
-      removeFromCart(itemId);
-    }
-    
-    // 8. Checkout buttons
-    else if (target.id === 'checkout-btn' || target.closest('#checkout-btn')) {
-      openCheckoutPopup();
-    }
-    else if (target.id === 'checkout-confirm' || target.closest('#checkout-confirm')) {
-      handleCheckout();
-    }
-    
-    // 9. Message popup OK
-    else if (target.id === 'message-ok' || target.closest('#message-ok')) {
-      closeAllPopups();
-    }
-  });
-
-  // ESC key για κλείσιμο popups
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeAllPopups();
-  });
-}
-
-// =============== HERO & INTRO ===============
-function handleIntroAnimation() {
-  const introOverlay = document.getElementById('intro-overlay');
-  const siteMain = document.querySelector('main');
-  
-  introOverlay.classList.add('intro-slide-up');
-  
-  setTimeout(() => {
-    introOverlay.style.display = 'none';
-    siteMain.classList.remove('site-hidden');
-    siteMain.classList.add('site-visible');
-  }, 600);
-}
-
-function handleAuthButton(button) {
-  if (currentUser && button.classList.contains('btn-continue')) {
-    showMessage(`Είστε συνδεδεμένος ως ${currentUser.firstName} ${currentUser.lastName}`);
-    return;
-  }
-  
-  if (button.classList.contains('btn-continue') && currentUser) return;
-  
-  if (button.classList.contains('btn-register') && currentUser) {
-    // Logout
-    localStorage.removeItem('anastasia_user');
-    currentUser = null;
-    updateAuthUI();
-    showMessage('Αποσυνδεθήκατε επιτυχώς');
-    return;
-  }
-  
-  // Απλοποιημένο: Άνοιγμα μηνύματος για demo
-  const type = button.classList.contains('btn-continue') ? 'σύνδεσης' : 'εγγραφής';
-  showMessage(`Λειτουργία ${type} - Σε πλήρη έκδοση θα ανοίξει popup`);
-}
-
-function updateAuthUI() {
-  const loginBtn = document.querySelector('.btn-continue');
-  const registerBtn = document.querySelector('.btn-register');
-  
-  if (!loginBtn || !registerBtn) return;
-  
-  if (currentUser) {
-    loginBtn.innerHTML = `<i class="fa-solid fa-user"></i> ${currentUser.firstName}`;
-    registerBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Αποσύνδεση';
-  } else {
-    loginBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Σύνδεση';
-    registerBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Εγγραφή';
-  }
-}
-
-// =============== PRODUCTS ===============
-function handleFilterClick(button) {
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const productCards = document.querySelectorAll('.product-card');
-  
-  filterButtons.forEach(b => b.classList.remove('active'));
-  button.classList.add('active');
-  
-  const filter = button.dataset.filter;
-  productCards.forEach(card => {
-    const cat = card.dataset.category;
-    card.style.display = (filter === 'all' || cat === filter) ? '' : 'none';
-  });
-}
-
-function openProductDetails(productCard) {
-=======
   setupHero();
   setupProducts();
   setupCart();
@@ -230,7 +75,6 @@ function setupProducts() {
 }
 
 function openProductDetailsPopup(productCard) {
->>>>>>> origin/fanti-feature
   currentProduct = {
     id: productCard.dataset.sku || 'AF-' + Date.now(),
     name: productCard.querySelector('h3').textContent,
@@ -239,81 +83,6 @@ function openProductDetailsPopup(productCard) {
     desc: productCard.dataset.desc || 'Premium προϊόν υψηλής ποιότητας.'
   };
   
-<<<<<<< HEAD
-  currentQuantity = 1;
-  currentSize = 'M';
-  
-  // Χρησιμοποιούμε το υπάρχον message popup για προβολή προϊόντος
-  const messagePopup = document.getElementById('message-popup');
-  const messageTitle = document.getElementById('message-title');
-  const messageText = document.getElementById('message-text');
-  const messageOk = document.getElementById('message-ok');
-  
-  messageTitle.innerHTML = '<i class="fa-solid fa-info-circle"></i> Λεπτομέρειες Προϊόντος';
-  messageOk.innerHTML = '<i class="fa-solid fa-cart-plus"></i> Προσθήκη στο καλάθι';
-  
-  messageText.innerHTML = `
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 10px;">
-      <div>
-        <img src="${currentProduct.image}" alt="${currentProduct.name}" 
-             style="width: 100%; border-radius: 8px;">
-      </div>
-      <div>
-        <h3 style="margin-top: 0;">${currentProduct.name}</h3>
-        <div style="font-size: 22px; color: var(--accent); font-weight: bold; margin: 10px 0;">
-          ${currentProduct.price.toFixed(2).replace('.', ',')} €
-        </div>
-        <p style="color: #555; font-size: 14px;">${currentProduct.desc}</p>
-        
-        <div style="margin: 15px 0;">
-          <div style="font-weight: bold; margin-bottom: 5px;">Μέγεθος:</div>
-          <div style="display: flex; gap: 8px;">
-            ${['S', 'M', 'L', 'XL'].map(size => `
-              <button class="size-option ${size === currentSize ? 'active' : ''}" 
-                      data-size="${size}">${size}</button>
-            `).join('')}
-          </div>
-        </div>
-        
-        <div style="margin: 15px 0;">
-          <div style="font-weight: bold; margin-bottom: 5px;">Ποσότητα:</div>
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <button id="qty-minus" style="padding: 5px 15px;">−</button>
-            <span id="current-qty" style="font-size: 18px; font-weight: bold;">${currentQuantity}</span>
-            <button id="qty-plus" style="padding: 5px 15px;">+</button>
-          </div>
-        </div>
-        
-        <button id="add-to-cart" style="width: 100%; padding: 12px; background: var(--accent); 
-                color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px;">
-          <i class="fa-solid fa-cart-plus"></i> Προσθήκη - ${(currentProduct.price * currentQuantity).toFixed(2).replace('.', ',')} €
-        </button>
-      </div>
-    </div>
-  `;
-  
-  messagePopup.classList.add('active');
-  document.getElementById('cart-overlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function handleSizeSelection(button) {
-  document.querySelectorAll('.size-option').forEach(b => b.classList.remove('active'));
-  button.classList.add('active');
-  currentSize = button.dataset.size;
-}
-
-function updateQuantity(change) {
-  currentQuantity = Math.max(1, Math.min(10, currentQuantity + change));
-  const qtyElement = document.getElementById('current-qty');
-  const addButton = document.getElementById('add-to-cart');
-  
-  if (qtyElement) qtyElement.textContent = currentQuantity;
-  if (addButton && currentProduct) {
-    const total = (currentProduct.price * currentQuantity).toFixed(2).replace('.', ',');
-    addButton.innerHTML = `<i class="fa-solid fa-cart-plus"></i> Προσθήκη - ${total} €`;
-  }
-=======
   // Create popup HTML
   const popupHTML = `
     <div class="cart-overlay active" id="product-overlay"></div>
@@ -400,43 +169,11 @@ function updateQuantity(change) {
   let current = parseInt(qtyElement.textContent) || 1;
   current = Math.max(1, Math.min(10, current + change));
   qtyElement.textContent = current;
->>>>>>> origin/fanti-feature
 }
 
 function addCurrentProductToCart() {
   if (!currentProduct) return;
   
-<<<<<<< HEAD
-  cartState.items.push({
-    id: currentProduct.id + '_' + currentSize,
-    name: `${currentProduct.name} (${currentSize})`,
-    price: currentProduct.price,
-    image: currentProduct.image,
-    quantity: currentQuantity,
-    total: currentProduct.price * currentQuantity
-  });
-  
-  updateCartTotals();
-  updateCartBadge();
-  updateCartPopup();
-  
-  showMessage(`✅ Προστέθηκαν ${currentQuantity} τεμ. στο καλάθι!`);
-  closeAllPopups();
-  
-  // Fly animation
-  const flyEl = document.createElement('div');
-  flyEl.className = 'fly-animation';
-  document.body.appendChild(flyEl);
-  setTimeout(() => flyEl.remove(), 800);
-}
-
-// =============== CART SYSTEM ===============
-function openCartPopup() {
-  closeAllPopups();
-  
-  document.getElementById('cart-overlay').classList.add('active');
-  document.getElementById('cart-popup').classList.add('active');
-=======
   const qty = parseInt(document.getElementById('product-qty')?.textContent) || 1;
   const size = document.querySelector('.size-option.active')?.dataset.size || 'M';
   
@@ -503,14 +240,11 @@ function openCartPopup() {
   
   cartOverlay.classList.add('active');
   cartPopup.classList.add('active');
->>>>>>> origin/fanti-feature
   document.body.style.overflow = 'hidden';
   
   updateCartPopup();
 }
 
-<<<<<<< HEAD
-=======
 function closeAllPopups() {
   document.querySelectorAll('.cart-overlay, .cart-popup').forEach(el => {
     el.classList.remove('active');
@@ -518,7 +252,6 @@ function closeAllPopups() {
   document.body.style.overflow = '';
 }
 
->>>>>>> origin/fanti-feature
 function updateCartTotals() {
   cartState.totalItems = cartState.items.reduce((sum, item) => sum + item.quantity, 0);
   cartState.totalPrice = cartState.items.reduce((sum, item) => sum + item.total, 0);
@@ -532,28 +265,13 @@ function updateCartPopup() {
   
   if (cartState.items.length === 0) {
     cartItems.innerHTML = `
-<<<<<<< HEAD
-      <div class="cart-empty">
-        <i class="fa-solid fa-cart-arrow-down"></i>
-=======
       <div style="text-align: center; padding: 60px 20px; color: #888;">
         <i class="fa-solid fa-cart-arrow-down" style="font-size: 48px; opacity: 0.3; margin-bottom: 20px;"></i>
->>>>>>> origin/fanti-feature
         <p>Το καλάθι σου είναι άδειο</p>
       </div>
     `;
   } else {
     cartItems.innerHTML = cartState.items.map(item => `
-<<<<<<< HEAD
-      <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}">
-        <div class="cart-item-info">
-          <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-price">${item.price.toFixed(2)} € × ${item.quantity}</div>
-        </div>
-        <div class="cart-item-total">${item.total.toFixed(2)} €</div>
-        <button class="remove-item" data-id="${item.id}" title="Αφαίρεση">
-=======
       <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f9f9f9; border-radius: 10px; margin-bottom: 10px;">
         <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
         <div style="flex: 1;">
@@ -564,7 +282,6 @@ function updateCartPopup() {
           ${item.total.toFixed(2)} €
         </div>
         <button onclick="removeFromCart('${item.id}')" style="background: none; border: none; color: #ff4444; cursor: pointer;">
->>>>>>> origin/fanti-feature
           <i class="fa-solid fa-trash"></i>
         </button>
       </div>
@@ -591,66 +308,6 @@ function updateCartBadge() {
   cartCount.style.display = cartState.totalItems > 0 ? 'inline-flex' : 'none';
 }
 
-<<<<<<< HEAD
-// =============== CHECKOUT ===============
-function openCheckoutPopup() {
-  if (cartState.items.length === 0) {
-    showMessage('Το καλάθι σας είναι άδειο');
-    return;
-  }
-  
-  document.getElementById('cart-overlay').classList.add('active');
-  document.getElementById('checkout-popup').classList.add('active');
-  document.body.style.overflow = 'hidden';
-  
-  document.getElementById('checkout-total').textContent = 
-    cartState.totalPrice.toFixed(2).replace('.', ',') + ' €';
-}
-
-function handleCheckout() {
-  const form = document.getElementById('checkout-form');
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
-  
-  const formData = new FormData(form);
-  const orderData = Object.fromEntries(formData);
-  
-  showMessage(`✅ Παραγγελία ολοκληρώθηκε! Θα σας ενημερώσουμε για την αποστολή. Σύνολο: ${cartState.totalPrice.toFixed(2).replace('.', ',')} €`);
-  
-  // Clear cart
-  cartState.items = [];
-  updateCartTotals();
-  updateCartBadge();
-  updateCartPopup();
-  
-  // Reset form
-  form.reset();
-}
-
-// =============== UTILITIES ===============
-function closeAllPopups() {
-  document.querySelectorAll('.cart-popup.active, .cart-overlay.active').forEach(el => {
-    el.classList.remove('active');
-  });
-  document.body.style.overflow = '';
-  currentProduct = null;
-}
-
-function showMessage(text) {
-  const messagePopup = document.getElementById('message-popup');
-  const messageText = document.getElementById('message-text');
-  
-  messageText.textContent = text;
-  messagePopup.classList.add('active');
-  document.getElementById('cart-overlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function loadUser() {
-  const saved = localStorage.getItem('anastasia_user');
-=======
 // =============== AUTH SYSTEM ===============
 function setupAuth() {
   // Login/Register buttons
@@ -795,40 +452,12 @@ function handleRegister() {
 }
 function loadUser() {
   const saved = localStorage.getItem('anastasia_current_user');
->>>>>>> origin/fanti-feature
   if (saved) {
     currentUser = JSON.parse(saved);
     updateAuthUI();
   }
 }
 
-<<<<<<< HEAD
-// =============== CSS για fly animation ===============
-// ΠΡΟΣΘΕΣΤΕ ΑΥΤΟ στο style.css:
-/*
-.fly-animation {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  background: var(--accent);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10000;
-  animation: flyToCart 0.8s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
-}
-
-@keyframes flyToCart {
-  0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(var(--x, 100px), var(--y, -100px)) scale(0.2);
-    opacity: 0;
-  }
-}
-*/
-=======
 function updateAuthUI() {
   const loginBtn = document.querySelector('.btn-continue');
   const registerBtn = document.querySelector('.btn-register');
@@ -860,4 +489,3 @@ function updateAuthUI() {
     };
   }
 }
->>>>>>> origin/fanti-feature

@@ -70,17 +70,10 @@ nav a:hover {
 
 /* =============== HERO (ΚΡΑΤΑ ΤΟ ΑΚΕΡΑΙΟ) =============== */
 .hero {
-<<<<<<< HEAD
-  max-width: 990px;
-  margin: 67px auto;
-  padding: 25px 60px;
-  border-radius: 45px;
-=======
   max-width: 1100px;
   margin: 80px auto;
   padding: 40px 50px;
   border-radius: 28px;
->>>>>>> origin/fanti-feature
   background: radial-gradient(circle at top left, #faf5f0 0%, #f1e9e2 100%);
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(255, 170, 150, 0.2);
@@ -97,22 +90,6 @@ nav a:hover {
 .hero-text h2 {
   font-size: 30px;
   font-weight: 300;
-<<<<<<< HEAD
-  letter-spacing: 7px;
-  text-transform: uppercase;
-  color: #111;
-  margin-bottom: 28px;
-}
-
-.hero-text p {
-  font-size: 12px;
-  color: #555;
-  max-width: 420px;
-  line-height: 0.7;
-  margin-bottom: 30px;
-}
-
-=======
   letter-spacing: 1px;
   text-transform: uppercase;
   color: #111;
@@ -128,7 +105,6 @@ nav a:hover {
 }
 
 /* =============== HERO BUTTONS WITH INDIVIDUAL HOVER COLORS =============== */
->>>>>>> origin/fanti-feature
 .hero-btn {
   padding: 15px 23px;
   border-radius: 999px;
@@ -145,12 +121,6 @@ nav a:hover {
   transition: all 0.3s ease;
 }
 
-<<<<<<< HEAD
-.hero-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 28px rgba(179, 120, 66, 0.732);
-  outline: 3px solid rgb(238, 163, 98);
-=======
 /* Register button (btn-register) - Blue hover */
 .btn-register:hover {
   background: #ffc558; /* Blue color */
@@ -176,7 +146,6 @@ nav a:hover {
   box-shadow: 0 12px 28px #ffc558;
   outline: 3px solid #ffc558;
   transform: translateY(-1px);
->>>>>>> origin/fanti-feature
 }
 
 .buttons-row {
@@ -187,13 +156,8 @@ nav a:hover {
 
 .hero-image-container {
   flex: 1;
-<<<<<<< HEAD
-  max-width: 388px;
-  border-radius: 20px;
-=======
   max-width: 430px;
   border-radius: 22px;
->>>>>>> origin/fanti-feature
   overflow: hidden;
   box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
 }
@@ -310,8 +274,6 @@ nav a:hover {
 .product-card:hover h3::after {
   width: 60%;
 }
-<<<<<<< HEAD
-=======
 /*koympia filtra mplouzes pantelonia klp*/
 /* =============== STYLISH FILTER BUTTONS =============== */
 .product-filters {
@@ -366,7 +328,6 @@ nav a:hover {
   background: var(--accent);
   border-radius: 50%;
 }
->>>>>>> origin/fanti-feature
 
 /* =============== BASIC POPUP STYLES =============== */
 .cart-overlay {
@@ -414,8 +375,6 @@ nav a:hover {
   transform: translate(-50%, -50%) scale(1);
 }
 
-<<<<<<< HEAD
-=======
 
 /*denjkserw*/
 /* =============== STYLISH CART CHECKOUT BUTTON =============== */
@@ -863,7 +822,6 @@ nav a:hover {
 
 
 
->>>>>>> origin/fanti-feature
 /* =============== FOOTER =============== */
 footer {
   text-align: center;
@@ -911,8 +869,6 @@ footer {
   }
 }
 
-<<<<<<< HEAD
-=======
 /*dokimh gpt */
 /* =============== STYLISH PRODUCT DETAILS POPUP =============== */
 #product-popup {
@@ -1128,83 +1084,8 @@ footer {
 
 
 
->>>>>>> origin/fanti-feature
 @media (max-width: 480px) {
   #products-grid {
     grid-template-columns: 1fr;
   }
-<<<<<<< HEAD
-}
-/* Intro popup animation */
-#intro-overlay {
-  transition: transform 0.6s ease-out;
-}
-
-#intro-overlay.intro-slide-up {
-  transform: translateY(-100%);
-}
-/* Floating cart item animation κινεζικο animaiton */
-@keyframes flyToCart {
-  0% { 
-    transform: translate(0, 0) scale(1); 
-    opacity: 1; 
-  }
-  100% { 
-    transform: translate(var(--x), var(--y)) scale(0); 
-    opacity: 0; 
-  }
-}
-
-.fly-animation {
-  position: fixed;
-  width: 50px;
-  height: 50px;
-  background: var(--accent);
-  border-radius: 50%;
-  animation: flyToCart 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5);
-}
-/* =============== AUTH POPUP STYLES =============== */
-.cart-popup input {
-  width: 100%;
-  padding: 12px 16px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: border-color 0.3s;
-}
-
-.cart-popup input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(224, 122, 95, 0.1);
-}
-
-.cart-popup button {
-  width: 100%;
-  padding: 14px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-
-.cart-popup button:hover {
-  background: var(--accent-dark);
-  transform: translateY(-1px);
-}
-
-.cart-popup a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.cart-popup a:hover {
-  text-decoration: underline;
-=======
->>>>>>> origin/fanti-feature
 }
