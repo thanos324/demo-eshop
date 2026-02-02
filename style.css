@@ -351,3 +351,31 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+/* Intro popup animation */
+#intro-overlay {
+  transition: transform 0.6s ease-out;
+}
+
+#intro-overlay.intro-slide-up {
+  transform: translateY(-100%);
+}
+/* Floating cart item animation κινεζικο animaiton */
+@keyframes flyToCart {
+  0% { 
+    transform: translate(0, 0) scale(1); 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translate(var(--x), var(--y)) scale(0); 
+    opacity: 0; 
+  }
+}
+
+.fly-animation {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: flyToCart 0.8s cubic-bezier(0.5, -0.5, 0.5, 1.5);
+}

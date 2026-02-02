@@ -37,11 +37,15 @@ function setupHero() {
         const introOverlay = document.getElementById('intro-overlay');
         const siteMain = document.querySelector('main');
         
-        introOverlay.classList.add('intro-hide');
-        siteMain.classList.remove('site-hidden');
-        siteMain.classList.add('site-visible');
+        // Προσθέτουμε την κλάση για το animation
+        introOverlay.classList.add('intro-slide-up');
         
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Μετά το animation, εμφανίζουμε την κανονική σελίδα
+        setTimeout(() => {
+          introOverlay.style.display = 'none';
+          siteMain.classList.remove('site-hidden');
+          siteMain.classList.add('site-visible');
+        }, 600); // 600ms = duration του animation
       }
     });
   });
@@ -135,6 +139,30 @@ function openProductDetailsPopup(productCard) {
           
           <!-- Add to cart button -->
           <button onclick="addCurrentProductToCart()" 
+          // Fly animation function - ΠΡΟΣΘΕΣΕ ΑΥΤΗ ΤΗΝ ΣΥΝΑΡΤΗΣΗ
+              <!--fly animation for cart-->
+              function flyToCart(event) {
+                const cartIcon = document.getElementById('cart-icon');
+                if (!cartIcon) return;
+                
+                const flyEl = document.createElement('div');
+                flyEl.className = 'fly-animation';
+                
+                // Βρες τις θέσεις
+                const startRect = event.target.getBoundingClientRect();
+                const endRect = cartIcon.getBoundingClientRect();
+                
+                // Υπολόγισε απόσταση
+                const x = endRect.left - startRect.left + 15;
+                const y = endRect.top - startRect.top + 15;
+                
+                flyEl.style.setProperty('--x', `${x}px`);
+                flyEl.style.setProperty('--y', `${y}px`);
+                
+                document.body.appendChild(flyEl);
+                setTimeout(() => flyEl.remove(), 800);
+              }
+                 flyToCart(event);
                   style="width: 100%; padding: 16px; background: var(--accent); color: white; 
                          border: none; border-radius: 12px; font-size: 16px; font-weight: bold;
                          cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
@@ -171,7 +199,7 @@ function updateQuantity(change) {
   qtyElement.textContent = current;
 }
 
-function addCurrentProductToCart() {
+function addCurrentProductToCart(event) {
   if (!currentProduct) return;
   
   const qty = parseInt(document.getElementById('product-qty')?.textContent) || 1;
@@ -190,10 +218,12 @@ function addCurrentProductToCart() {
   // Update cart totals
   updateCartTotals();
   updateCartBadge();
+
+   flyToCart(event);
   
   // Show success
   alert(`✅ Προστέθηκαν ${qty} τεμ. στο καλάθι!`);
-  
+    
   // Close popup
   closeProductPopup();
 }
@@ -517,4 +547,27 @@ function updateAuthUI() {
 // =============== UTILITIES ===============
 function formatPrice(price) {
   return parseFloat(price).toFixed(2).replace('.', ',') + ' €';
+}
+
+// =============== FLY ANIMATION ===============
+function flyToCart(event) {
+  const cartIcon = document.getElementById('cart-icon');
+  if (!cartIcon) return;
+  
+  const flyEl = document.createElement('div');
+  flyEl.className = 'fly-animation';
+  
+  // Βρες τις θέσεις
+  const startRect = event.target.getBoundingClientRect();
+  const endRect = cartIcon.getBoundingClientRect();
+  
+  // Υπολόγισε απόσταση
+  const x = endRect.left - startRect.left + 15;
+  const y = endRect.top - startRect.top + 15;
+  
+  flyEl.style.setProperty('--x', `${x}px`);
+  flyEl.style.setProperty('--y', `${y}px`);
+  
+  document.body.appendChild(flyEl);
+  setTimeout(() => flyEl.remove(), 800);
 }
