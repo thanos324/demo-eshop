@@ -25,8 +25,11 @@ nav a:hover { border-color: var(--accent-soft); background: #fff; color: #000;
 
 /* =============== HERO =============== */
 .hero {
-  max-width: 1100px; margin: 80px auto; padding: 40px 50px; border-radius: 28px;
-  background: radial-gradient(circle at top left, #faf5f0 0%, #f1e9e2 100%);
+  max-width: 985px;
+  margin: 80px auto;
+  padding: 40px 60px;
+  border-radius: 28px;
+  background: radial-gradient(circle at top left, #ffefdf 0%, #ffe6d4 100%);
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 170, 150, 0.2);
   overflow: hidden;
 }
