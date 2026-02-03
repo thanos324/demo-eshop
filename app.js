@@ -226,108 +226,42 @@ function setupAuth() {
   });
 }
 
-// =============== LOCKED POPUP SYSTEM ===============
-function createLockedPopup(type = 'code', options = {}) {
-  const popupHTML = `
-    <div class="cart-overlay active" id="locked-overlay"></div>
-    <div class="cart-popup active locked-popup ${type === 'code' ? 'locked-with-code' : 'locked-with-timer'}" id="locked-popup">
+function openAuthPopup(type) {
+  closeAllPopups();
+  let formHTML = type === 'login' ? `
+    <div class="cart-overlay active"></div>
+    <div class="cart-popup active">
       <div class="cart-popup-header">
-        <h3><i class="fa-solid fa-lock"></i> Κλειδωμένο Περιεχόμενο</h3>
-        <button class="cart-close" onclick="unlockPopup('cancel')"><i class="fa-solid fa-xmark"></i></button>
+        <h3><i class="fa-solid fa-right-to-bracket"></i> Σύνδεση</h3>
+        <button class="cart-close"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div style="padding: 40px 30px; text-align: center;">
-        <div style="font-size: 64px; margin-bottom: 20px;">${type === 'code' ? '🔒' : '⏳'}</div>
-        <h3 style="font-size: 22px; margin-bottom: 10px; color: #333;">
-          ${options.message || (type === 'code' ? 'Απαιτείται Κωδικός Πρόσβασης' : 'Περιορισμένος Χρόνος')}
-        </h3>
-        <p style="color: #666; line-height: 1.6; margin-bottom: 30px;">
-          ${type === 'code' ? 'Εισάγετε τον μυστικό κωδικό για να προχωρήσετε.' : 'Έχετε περιορισμένο χρόνο για να προχωρήσετε.'}
-        </p>
-        ${type === 'code' ? `
-          <div class="unlock-overlay">
-            <input type="text" class="unlock-input" id="unlock-code-input" 
-                   placeholder="6ψήφιος κωδικός" maxlength="6" 
-                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-            <button class="unlock-button" onclick="checkUnlockCode('${options.code || '000000'}')">Ξεκλείδωμα</button>
-          </div>
-        ` : `
-          <div class="unlock-overlay">
-            <div class="timer-display" id="lock-timer">${formatTime(options.timerSeconds || 60)}</div>
-            <button class="unlock-button" onclick="unlockPopup('timer')">Προχώρησε τώρα</button>
-          </div>
-        `}
-        <div style="margin-top: 30px; font-size: 13px; color: #999;">
-          <i class="fa-solid fa-info-circle"></i>
-          ${type === 'code' ? 'Ζητήστε τον κωδικό από τον διαχειριστή.' : 'Αυτό το popup θα κλείσει μετά το τέλος του χρόνου.'}
-        </div>
+      <div style="padding: 30px;">
+        <input type="text" id="login-username" placeholder="Όνομα χρήστη">
+        <input type="password" id="login-password" placeholder="Κωδικός πρόσβασης">
+        <button onclick="handleLogin()">Σύνδεση</button>
+        <p style="text-align: center; margin-top: 25px; color: #666; font-size: 14px;">Δεν έχετε λογαριασμό; <a href="#" onclick="openAuthPopup('register'); event.preventDefault()">Εγγραφή</a></p>
+      </div>
+    </div>` : `
+    <div class="cart-overlay active"></div>
+    <div class="cart-popup active">
+      <div class="cart-popup-header">
+        <h3><i class="fa-solid fa-user-plus"></i> Εγγραφή</h3>
+        <button class="cart-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="padding: 30px;">
+        <input type="text" id="reg-username" placeholder="Όνομα χρήστη">
+        <input type="password" id="reg-password" placeholder="Κωδικός πρόσβασης">
+        <input type="password" id="reg-confirm-password" placeholder="Επιβεβαίωση κωδικού">
+        <button onclick="handleRegister()">Εγγραφή</button>
+        <p style="text-align: center; margin-top: 25px; color: #666; font-size: 14px;">Έχετε ήδη λογαριασμό; <a href="#" onclick="openAuthPopup('login'); event.preventDefault()">Σύνδεση</a></p>
       </div>
     </div>`;
+    
   
   const container = document.createElement('div');
-  container.innerHTML = popupHTML;
+  container.innerHTML = formHTML;
   document.body.appendChild(container);
   document.body.style.overflow = 'hidden';
-  
-  if (type === 'timer') startLockTimer(options.timerSeconds || 60);
-  
-  const input = document.getElementById('unlock-code-input');
-  if (input) input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') checkUnlockCode(options.code || '000000');
-  });
-}
-
-function startLockTimer(seconds) {
-  let timeLeft = seconds;
-  const timerElement = document.getElementById('lock-timer');
-  const timerInterval = setInterval(() => {
-    timeLeft--;
-    if (timerElement) timerElement.textContent = formatTime(timeLeft);
-    if (timeLeft <= 0) { clearInterval(timerInterval); unlockPopup('timeout'); }
-  }, 1000);
-}
-
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-}
-
-function checkUnlockCode(correctCode) {
-  const input = document.getElementById('unlock-code-input');
-  const unlockOverlay = document.querySelector('.unlock-overlay');
-  if (!input || !unlockOverlay) return;
-  
-  if (input.value === correctCode) {
-    unlockOverlay.classList.add('unlock-success');
-    setTimeout(() => unlockPopup('success'), 500);
-  } else {
-    input.classList.add('invalid');
-    input.value = ''; input.placeholder = 'Λάθος κωδικός! Δοκιμάστε ξανά';
-    input.style.animation = 'none';
-    setTimeout(() => input.style.animation = 'shake 0.5s ease', 10);
-    setTimeout(() => {
-      input.classList.remove('invalid');
-      input.placeholder = '6ψήφιος κωδικός';
-    }, 2000);
-  }
-}
-
-function unlockPopup(reason) {
-  const lockedPopup = document.getElementById('locked-popup');
-  const lockedOverlay = document.getElementById('locked-overlay');
-  if (lockedPopup) lockedPopup.remove();
-  if (lockedOverlay) lockedOverlay.remove();
-  document.body.style.overflow = '';
-  if (reason === 'success') showSuccess('✅ Το περιεχόμενο ξεκλείδωσε!');
-  else if (reason === 'timeout') showError('⏰ Ξεπεράσατε το χρονικό όριο.');
-}
-
-// Προσθήκη animation shake
-if (!document.querySelector('style[data-shake-animation]')) {
-  const style = document.createElement('style');
-  style.setAttribute('data-shake-animation', '');
-  style.textContent = `@keyframes shake { 0%,100%{transform:translateX(0);} 10%,30%,50%,70%,90%{transform:translateX(-5px);} 20%,40%,60%,80%{transform:translateX(5px);} }`;
-  document.head.appendChild(style);
 }
 
 function handleLogin() {
