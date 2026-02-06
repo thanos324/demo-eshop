@@ -135,7 +135,6 @@ function addCurrentProductToCart() {
   });
   
   updateCartTotals(); updateCartBadge();
-  alert(`✅ Προστέθηκαν ${qty} τεμ. στο καλάθι!`);
   closeProductPopup();
 }
 
@@ -337,3 +336,25 @@ function updateAuthUI() {
     registerBtn.onclick = (e) => { e.preventDefault(); openAuthPopup('register'); };
   }
 }
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const loginBtn = document.getElementById("login-btn");
+  const modal = document.getElementById("login-modal");
+  const closeBtn = document.getElementById("close-modal");
+
+  loginBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    modal.style.display = "flex";
+  });
+
+  closeBtn.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+});
