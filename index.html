@@ -12,31 +12,19 @@
   <header>
     <h1>ANASTASIA FASHION</h1>
     <nav>
-      <a href="#" class="cart-icon" id="cart-icon">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span class="cart-count" id="cart-count">0</span>
-      </a>
-    </nav>
+  <a href="#" class="cart-icon" id="cart-icon">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span class="cart-count" id="cart-count">0</span>
+  </a>
+
+  <a href="#" class="login-btn" id="login-btn">
+    <i class="fa-solid fa-user"></i>
+    <span>Σύνδεση</span>
+  </a>
+</nav>
+
   </header>
-  <!-- HERO SECTION -->
-  <div id="intro-overlay">
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="hero-image-container">
-          <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpaperaccess.com%2Ffull%2F4322577.png&f=1&nofb=1&ipt=2f3536a0c15499f035f443b5e0ed618afa164d91e04c7b7b3ed12b446a2484ee" alt="Συλλογή ρούχων">
-        </div>
-        <div class="hero-text">
-          <h2>ANASTASIA FASHION</h2>
-          <p>Διαλέξτε επώνυμες μάρκες ρούχων στην καλύτερη τιμή της αγοράς!</p>
-          <div class="buttons-row">
-            <button class="hero-btn btn-products">Δες τα προϊόντα μας</button>
-            <button class="hero-btn btn-register">Δημιουργήστε λογαριασμό</button>
-            <button class="hero-btn btn-continue">Σύνδεση</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+ 
   <!-- MAIN CONTENT -->
   <main class="site-hidden">
     <section class="products-section">
@@ -249,5 +237,22 @@
 
   <!-- SCRIPTS -->
   <script src="app.js"></script>
+  <!-- Login Button (το έχεις ήδη) -->
+
+
+<!-- Popup Overlay -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <span class="close-btn" id="close-modal">&times;</span>
+    <h2>Σύνδεση</h2>
+
+    <form>
+      <input type="text" placeholder="Username" />
+      <input type="password" placeholder="Password" />
+      <button type="submit">Σύνδεση</button>
+    </form>
+  </div>
+</div>
+
 </body>
 </html>
