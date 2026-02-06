@@ -120,25 +120,6 @@ function updateQuantity(change) {
   qtyElement.textContent = current;
 }
 
-function addCurrentProductToCart() {
-  if (!currentProduct) return;
-  const qty = parseInt(document.getElementById('product-qty')?.textContent) || 1;
-  const size = document.querySelector('.size-option.active')?.dataset.size || 'M';
-  
-  cartState.items.push({
-    id: currentProduct.id + '_' + size,
-    name: `${currentProduct.name} (${size})`,
-    price: currentProduct.price,
-    image: currentProduct.image,
-    quantity: qty,
-    total: currentProduct.price * qty
-  });
-  
-  updateCartTotals(); updateCartBadge();
-  alert(`✅ Προστέθηκαν ${qty} τεμ. στο καλάθι!`);
-  closeProductPopup();
-}
-
 function closeProductPopup() {
   document.querySelectorAll('#product-overlay, #product-popup').forEach(el => el.remove());
   document.body.style.overflow = ''; currentProduct = null;
@@ -156,6 +137,18 @@ function setupCart() {
   });
   
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllPopups(); });
+  
+  // Προσθήκη event listener για το checkout button (αν υπάρχει)
+  const checkoutBtn = document.getElementById('checkout-btn');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+      if (cartState.items.length === 0) {
+        alert('Το καλάθι σου είναι άδειο!');
+        return;
+      }
+      showOrderConfirmation(); // ΔΙΟΡΘΩΣΗ: ΠΡΟΣΘΗΚΗ ΚΛΗΣΗΣ ΤΗΣ ΣΥΝΑΡΤΗΣΗΣ
+    });
+  }
 }
 
 function openCartPopup() {
@@ -228,6 +221,7 @@ function setupAuth() {
 
 function openAuthPopup(type) {
   closeAllPopups();
+  
   let formHTML = type === 'login' ? `
     <div class="cart-overlay active"></div>
     <div class="cart-popup active">
@@ -257,11 +251,16 @@ function openAuthPopup(type) {
       </div>
     </div>`;
     
-  
   const container = document.createElement('div');
   container.innerHTML = formHTML;
   document.body.appendChild(container);
   document.body.style.overflow = 'hidden';
+  
+  // Προσθήκη event listener για το close button
+  const closeBtn = container.querySelector('.cart-close');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeAllPopups);
+  }
 }
 
 function handleLogin() {
@@ -281,7 +280,9 @@ function handleLogin() {
   
   currentUser = { username: username };
   localStorage.setItem('anastasia_current_user', JSON.stringify(currentUser));
-  closeAllPopups(); updateAuthUI();
+  closeAllPopups();
+  // ΔΙΟΡΘΩΣΗ: ΘΑ ΠΡΟΣΘΕΣΩ ΤΗΝ updateAuthUI() ΑΚΡΙΒΩΣ ΚΑΤΩ ΑΠΟ ΤΗΝ loadUser()
+  if (typeof updateAuthUI === 'function') updateAuthUI();
   alert(`Καλώς ήρθες ${username}!`);
 }
 
@@ -308,32 +309,118 @@ function handleRegister() {
   
   currentUser = { username: username };
   localStorage.setItem('anastasia_current_user', JSON.stringify(currentUser));
-  closeAllPopups(); updateAuthUI();
+  closeAllPopups();
+  // ΔΙΟΡΘΩΣΗ: ΘΑ ΠΡΟΣΘΕΣΩ ΤΗΝ updateAuthUI() ΑΚΡΙΒΩΣ ΚΑΤΩ ΑΠΟ ΤΗΝ loadUser()
+  if (typeof updateAuthUI === 'function') updateAuthUI();
   alert(`Καλώς ήρθες ${username}! Εγγραφή ολοκληρώθηκε.`);
 }
 
 function loadUser() {
   const saved = localStorage.getItem('anastasia_current_user');
-  if (saved) { currentUser = JSON.parse(saved); updateAuthUI(); }
+  if (saved) { 
+    try {
+      currentUser = JSON.parse(saved); 
+      // ΔΙΟΡΘΩΣΗ: ΘΑ ΠΡΟΣΘΕΣΩ ΤΗΝ updateAuthUI() ΑΚΡΙΒΩΣ ΕΔΩ ΚΑΤΩ
+      if (typeof updateAuthUI === 'function') updateAuthUI();
+    } catch (e) {
+      console.error('Error loading user:', e);
+      currentUser = null;
+    }
+  }
 }
 
-function updateAuthUI() {
-  const loginBtn = document.querySelector('.btn-continue');
-  const registerBtn = document.querySelector('.btn-register');
-  if (!loginBtn || !registerBtn) return;
-  
-  if (currentUser) {
-    loginBtn.innerHTML = `<i class="fa-solid fa-user"></i> ${currentUser.username}`;
-    registerBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Αποσύνδεση';
-    registerBtn.onclick = (e) => {
-      e.preventDefault();
-      localStorage.removeItem('anastasia_current_user');
-      currentUser = null; updateAuthUI();
-      alert('Αποσυνδεθήκατε επιτυχώς');
-    };
-  } else {
-    loginBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Σύνδεση';
-    registerBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Εγγραφή';
-    registerBtn.onclick = (e) => { e.preventDefault(); openAuthPopup('register'); };
+// =============== ORDER CONFIRMATION ===============
+function showOrderConfirmation() {
+  if (cartState.items.length === 0) {
+    alert('Το καλάθι σου είναι άδειο!');
+    return;
   }
+  
+  const userName = currentUser?.username || 'φίλε';
+  
+  const popupHTML = `
+    <div class="cart-overlay active"></div>
+    <div class="cart-popup active">
+      <div class="cart-popup-header">
+        <h3><i class="fa-solid fa-check-circle"></i> Επιτυχής Παραγγελία!</h3>
+        <button class="cart-close" onclick="closeAllPopups()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="order-confirmation">
+        <i class="fa-solid fa-check-circle"></i>
+        <h4>Ευχαριστούμε ${userName}!</h4>
+        <p>Η παραγγελία σας επιβεβαιώθηκε με επιτυχία.</p>
+        <p>Θα σας ενημερώσουμε για την εξέλιξή της πολύ σύντομα.</p>
+        <p style="margin-top: 20px; font-size: 14px; color: #888;">
+          Αριθμός Παραγγελίας: <strong>AF-${Date.now().toString().slice(-6)}</strong>
+        </p>
+      </div>
+      <div class="cart-popup-footer">
+        <button class="cart-checkout" onclick="closeAllPopups(); cartState.items = []; updateCartBadge();">
+          <i class="fa-solid fa-check"></i> ΟΚ
+        </button>
+      </div>
+    </div>`;
+  
+  const container = document.createElement('div');
+  container.innerHTML = popupHTML;
+  document.body.appendChild(container);
+  document.body.style.overflow = 'hidden';
+  
+  // Αδειάζουμε το καλάθι
+  cartState.items = [];
+  updateCartBadge();
+  updateCartTotals();
+}
+
+// =============== CART ANIMATION ===============
+function addCurrentProductToCart() {
+  if (!currentProduct) return;
+  const qty = parseInt(document.getElementById('product-qty')?.textContent) || 1;
+  const size = document.querySelector('.size-option.active')?.dataset.size || 'M';
+  
+  console.log("Προσθήκη:", currentProduct.id, "Μέγεθος:", size);
+  
+  const itemId = `${currentProduct.id}_${size}`;
+  const existing = cartState.items.find(item => item.id === itemId);
+  
+  if (existing) {
+    existing.quantity += qty;
+    existing.total = existing.price * existing.quantity;
+    console.log("Υπήρχε - Νέα ποσότητα:", existing.quantity);
+  } else {
+    cartState.items.push({
+      id: itemId, name: `${currentProduct.name} (${size})`,
+      price: currentProduct.price, image: currentProduct.image,
+      quantity: qty, total: currentProduct.price * qty
+    });
+    console.log("Νέο προϊόν - ID:", itemId);
+  }
+  
+  console.log("Cart State:", cartState.items);
+  
+  updateCartTotals(); 
+  updateCartBadge();
+  
+  // Minimal animation
+  const cart = document.getElementById('cart-icon');
+  if (cart) {
+    cart.classList.add('cart-pulse');
+    setTimeout(() => cart.classList.remove('cart-pulse'), 300);
+  }
+  setTimeout(closeProductPopup, 200);
+}
+
+// ΔΙΟΡΘΩΣΗ: ΠΡΟΣΘΗΚΗ ΤΗΣ updateAuthUI() ΣΥΝΑΡΤΗΣΗΣ
+// =============== UPDATE AUTH UI ===============
+function updateAuthUI() {
+  const authButtons = document.querySelectorAll('.btn-continue');
+  authButtons.forEach(btn => {
+    if (currentUser) {
+      btn.innerHTML = `<i class="fa-solid fa-user"></i> ${currentUser.username}`;
+      btn.classList.add('logged-in');
+    } else {
+      btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> Συνέχεια`;
+      btn.classList.remove('logged-in');
+    }
+  });
 }
