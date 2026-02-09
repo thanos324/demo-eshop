@@ -120,27 +120,6 @@ function updateQuantity(change) {
   qtyElement.textContent = current;
 }
 
-<<<<<<< HEAD
-=======
-function addCurrentProductToCart() {
-  if (!currentProduct) return;
-  const qty = parseInt(document.getElementById('product-qty')?.textContent) || 1;
-  const size = document.querySelector('.size-option.active')?.dataset.size || 'M';
-  
-  cartState.items.push({
-    id: currentProduct.id + '_' + size,
-    name: `${currentProduct.name} (${size})`,
-    price: currentProduct.price,
-    image: currentProduct.image,
-    quantity: qty,
-    total: currentProduct.price * qty
-  });
-  
-  updateCartTotals(); updateCartBadge();
-  closeProductPopup();
-}
-
->>>>>>> 31826ca3022832b7a96521dd9154e5a49fb91f44
 function closeProductPopup() {
   document.querySelectorAll('#product-overlay, #product-popup').forEach(el => el.remove());
   document.body.style.overflow = ''; currentProduct = null;
@@ -356,7 +335,6 @@ function showOrderConfirmation() {
     alert('Το καλάθι σου είναι άδειο!');
     return;
   }
-<<<<<<< HEAD
   
   const userName = currentUser?.username || 'φίλε';
   
@@ -446,28 +424,3 @@ function updateAuthUI() {
     }
   });
 }
-=======
-}
-
-
-document.addEventListener("DOMContentLoaded", function () {
-  const loginBtn = document.getElementById("login-btn");
-  const modal = document.getElementById("login-modal");
-  const closeBtn = document.getElementById("close-modal");
-
-  loginBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    modal.style.display = "flex";
-  });
-
-  closeBtn.addEventListener("click", function () {
-    modal.style.display = "none";
-  });
-
-  modal.addEventListener("click", function (e) {
-    if (e.target === modal) {
-      modal.style.display = "none";
-    }
-  });
-});
->>>>>>> 31826ca3022832b7a96521dd9154e5a49fb91f44
