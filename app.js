@@ -221,46 +221,73 @@ function setupAuth() {
 
 function openAuthPopup(type) {
   closeAllPopups();
-  
-  let formHTML = type === 'login' ? `
-    <div class="cart-overlay active"></div>
-    <div class="cart-popup active">
+
+  const formHTML = `
+    <div class="cart-overlay active auth-overlay"></div>
+    <div class="cart-popup active auth-popup">
       <div class="cart-popup-header">
-        <h3><i class="fa-solid fa-right-to-bracket"></i> Σύνδεση</h3>
+        <h3>
+          <i class="fa-solid ${type === 'login' ? 'fa-right-to-bracket' : 'fa-user-plus'}"></i>
+          ${type === 'login' ? 'Σύνδεση' : 'Εγγραφή'}
+        </h3>
         <button class="cart-close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div style="padding: 30px;">
-        <input type="text" id="login-username" placeholder="Όνομα χρήστη">
-        <input type="password" id="login-password" placeholder="Κωδικός πρόσβασης">
-        <button onclick="handleLogin()">Σύνδεση</button>
-        <p style="text-align: center; margin-top: 25px; color: #666; font-size: 14px;">Δεν έχετε λογαριασμό; <a href="#" onclick="openAuthPopup('register'); event.preventDefault()">Εγγραφή</a></p>
+        ${
+          type === 'login'
+            ? `
+              <input type="text" id="login-username" placeholder="Όνομα χρήστη">
+              <input type="password" id="login-password" placeholder="Κωδικός πρόσβασης">
+              <button id="login-btn">Σύνδεση</button>
+              <p style="text-align:center;margin-top:25px;font-size:14px;">
+                Δεν έχετε λογαριασμό;
+                <a href="#" id="switch-register">Εγγραφή</a>
+              </p>
+            `
+            : `
+              <input type="text" id="reg-username" placeholder="Όνομα χρήστη">
+              <input type="password" id="reg-password" placeholder="Κωδικός πρόσβασης">
+              <input type="password" id="reg-confirm-password" placeholder="Επιβεβαίωση κωδικού">
+              <button id="register-btn">Εγγραφή</button>
+              <p style="text-align:center;margin-top:25px;font-size:14px;">
+                Έχετε ήδη λογαριασμό;
+                <a href="#" id="switch-login">Σύνδεση</a>
+              </p>
+            `
+        }
       </div>
-    </div>` : `
-    <div class="cart-overlay active"></div>
-    <div class="cart-popup active">
-      <div class="cart-popup-header">
-        <h3><i class="fa-solid fa-user-plus"></i> Εγγραφή</h3>
-        <button class="cart-close"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div style="padding: 30px;">
-        <input type="text" id="reg-username" placeholder="Όνομα χρήστη">
-        <input type="password" id="reg-password" placeholder="Κωδικός πρόσβασης">
-        <input type="password" id="reg-confirm-password" placeholder="Επιβεβαίωση κωδικού">
-        <button onclick="handleRegister()">Εγγραφή</button>
-        <p style="text-align: center; margin-top: 25px; color: #666; font-size: 14px;">Έχετε ήδη λογαριασμό; <a href="#" onclick="openAuthPopup('login'); event.preventDefault()">Σύνδεση</a></p>
-      </div>
-    </div>`;
-    
+    </div>
+  `;
+
   const container = document.createElement('div');
   container.innerHTML = formHTML;
   document.body.appendChild(container);
   document.body.style.overflow = 'hidden';
-  
-  // Προσθήκη event listener για το close button
+
+  const overlay = container.querySelector('.auth-overlay');
+  const popup = container.querySelector('.auth-popup');
   const closeBtn = container.querySelector('.cart-close');
-  if (closeBtn) {
-    closeBtn.addEventListener('click', closeAllPopups);
-  }
+
+  // ⛔ stop bubbling ΜΟΝΟ μέσα στο popup
+  popup.addEventListener('click', e => e.stopPropagation());
+
+  // ✅ click έξω κλείνει
+  overlay.addEventListener('click', closeAllPopups);
+  closeBtn.addEventListener('click', closeAllPopups);
+
+  // buttons
+  container.querySelector('#login-btn')?.addEventListener('click', handleLogin);
+  container.querySelector('#register-btn')?.addEventListener('click', handleRegister);
+
+  container.querySelector('#switch-register')?.addEventListener('click', e => {
+    e.preventDefault();
+    openAuthPopup('register');
+  });
+
+  container.querySelector('#switch-login')?.addEventListener('click', e => {
+    e.preventDefault();
+    openAuthPopup('login');
+  });
 }
 
 function handleLogin() {
