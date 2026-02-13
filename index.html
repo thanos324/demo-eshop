@@ -11,6 +11,8 @@
   <!-- HEADER -->
   <header>
     <h2>ANASTASIA FASHION</h2>
+    <a href="#" id="auth-btn" class="btn-continue">
+  <i class="fa-solid fa-right-to-bracket"></i> Σύνδεση/Εγγραφή</a>
     <nav>
       <a href="#" class="cart-icon" id="cart-icon">
         <i class="fa-solid fa-cart-shopping"></i>
@@ -223,6 +225,38 @@
       </button>
     </div>
   </div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCeAi7mifJzprkk-0qFbw_mNqP00Tw9bTA",
+    authDomain: "fir-e-shop-16249.firebaseapp.com",
+    projectId: "fir-e-shop-16249",
+    storageBucket: "fir-e-shop-16249.appspot.com",
+    messagingSenderId: "270560194393",
+    appId: "1:270560194393:web:693b5ffa282d6acca7a648"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.firebaseServices = {
+    auth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  };
+</script>
 
   <!-- FOOTER -->
   <footer>

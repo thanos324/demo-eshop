@@ -5,6 +5,28 @@ let currentUser = null, currentProduct = null;
 // =============== INITIALIZE ===============
 document.addEventListener('DOMContentLoaded', () => {
   setupHero(); setupProducts(); setupCart(); setupAuth(); loadUser();
+  let currentUser = JSON.parse(localStorage.getItem('anastasia_current_user'))  || null;
+
+const authBtn = document.getElementById('auth-btn');
+
+function updateAuthBtn() {
+  authBtn.textContent = currentUser ? currentUser.username : 'Σύνδεση/Εγγραφή';
+}
+
+authBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  if (currentUser) {
+    localStorage.removeItem('anastasia_current_user');
+    currentUser = null;
+    updateAuthBtn();
+  } else {
+    openAuthPopup('login');
+  }
+});
+
+updateAuthBtn();
+
 });
 
 // =============== HERO SECTION ===============
@@ -290,71 +312,13 @@ function openAuthPopup(type) {
   });
 }
 
-function handleLogin() {
-  const username = document.getElementById('login-username')?.value;
-  const password = document.getElementById('login-password')?.value;
-  
-  if (!username || !password) { alert('Συμπληρώστε όλα τα πεδία'); return; }
-  
-  let users = [];
-  try {
-    const usersData = localStorage.getItem('anastasia_users');
-    if (usersData) users = JSON.parse(usersData);
-  } catch (e) { users = []; }
-  
-  const user = users.find(u => u.username === username && u.password === password);
-  if (!user) { alert('Λάθος στοιχεία'); return; }
-  
-  currentUser = { username: username };
-  localStorage.setItem('anastasia_current_user', JSON.stringify(currentUser));
-  closeAllPopups();
-  // ΔΙΟΡΘΩΣΗ: ΘΑ ΠΡΟΣΘΕΣΩ ΤΗΝ updateAuthUI() ΑΚΡΙΒΩΣ ΚΑΤΩ ΑΠΟ ΤΗΝ loadUser()
-  if (typeof updateAuthUI === 'function') updateAuthUI();
-  alert(`Καλώς ήρθες ${username}!`);
-}
 
-function handleRegister() {
-  const username = document.getElementById('reg-username')?.value;
-  const password = document.getElementById('reg-password')?.value;
-  const confirmPassword = document.getElementById('reg-confirm-password')?.value;
-  
-  if (!username || !password || !confirmPassword) { alert('Συμπληρώστε όλα τα πεδία'); return; }
-  if (password !== confirmPassword) { alert('Οι κωδικοί δεν ταιριάζουν'); return; }
-  if (password.length < 6) { alert('Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες'); return; }
-  
-  let users = [];
-  try {
-    const usersData = localStorage.getItem('anastasia_users');
-    if (usersData) users = JSON.parse(usersData);
-  } catch (e) { users = []; }
-  
-  if (users.some(u => u.username === username)) { alert('Το όνομα χρήστη υπάρχει ήδη'); return; }
-  
-  const newUser = { username: username, password: password, registeredAt: new Date().toISOString() };
-  users.push(newUser);
-  localStorage.setItem('anastasia_users', JSON.stringify(users));
-  
-  currentUser = { username: username };
-  localStorage.setItem('anastasia_current_user', JSON.stringify(currentUser));
-  closeAllPopups();
-  // ΔΙΟΡΘΩΣΗ: ΘΑ ΠΡΟΣΘΕΣΩ ΤΗΝ updateAuthUI() ΑΚΡΙΒΩΣ ΚΑΤΩ ΑΠΟ ΤΗΝ loadUser()
-  if (typeof updateAuthUI === 'function') updateAuthUI();
-  alert(`Καλώς ήρθες ${username}! Εγγραφή ολοκληρώθηκε.`);
-}
 
-function loadUser() {
-  const saved = localStorage.getItem('anastasia_current_user');
-  if (saved) { 
-    try {
-      currentUser = JSON.parse(saved); 
-      // ΔΙΟΡΘΩΣΗ: ΘΑ ΠΡΟΣΘΕΣΩ ΤΗΝ updateAuthUI() ΑΚΡΙΒΩΣ ΕΔΩ ΚΑΤΩ
-      if (typeof updateAuthUI === 'function') updateAuthUI();
-    } catch (e) {
-      console.error('Error loading user:', e);
-      currentUser = null;
-    }
-  }
-}
+
+
+
+
+
 
 // =============== ORDER CONFIRMATION ===============
 function showOrderConfirmation() {
@@ -436,8 +400,6 @@ function addCurrentProductToCart() {
   }
   setTimeout(closeProductPopup, 200);
 }
-
-// ΔΙΟΡΘΩΣΗ: ΠΡΟΣΘΗΚΗ ΤΗΣ updateAuthUI() ΣΥΝΑΡΤΗΣΗΣ
 // =============== UPDATE AUTH UI ===============
 function updateAuthUI() {
   const authButtons = document.querySelectorAll('.btn-continue');
@@ -450,4 +412,59 @@ function updateAuthUI() {
       btn.classList.remove('logged-in');
     }
   });
+}
+// ================= FIREBASE AUTH =================
+
+async function handleRegister() {
+  const email = document.getElementById('reg-username')?.value;
+  const password = document.getElementById('reg-password')?.value;
+  const confirm = document.getElementById('reg-confirm-password')?.value;
+
+  if (!email || !password || !confirm) {
+    alert('Συμπλήρωσε όλα τα πεδία');
+    return;
+  }
+
+  if (password !== confirm) {
+    alert('Οι κωδικοί δεν ταιριάζουν');
+    return;
+  }
+
+  try {
+    await firebaseServices.createUserWithEmailAndPassword(
+      firebaseServices.auth,
+      email,
+      password
+    );
+
+    closeAllPopups();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function handleLogin() {
+  const email = document.getElementById('login-username')?.value;
+  const password = document.getElementById('login-password')?.value;
+
+  if (!email || !password) {
+    alert('Συμπλήρωσε όλα τα πεδία');
+    return;
+  }
+
+  try {
+    await firebaseServices.signInWithEmailAndPassword(
+      firebaseServices.auth,
+      email,
+      password
+    );
+
+    closeAllPopups();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+function logout() {
+  firebaseServices.signOut(firebaseServices.auth);
 }
