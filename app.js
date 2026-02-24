@@ -1,32 +1,40 @@
 // =============== GLOBALS ===============
-const cartState = { items: [], totalItems: 0, totalPrice: 0 };
-let currentUser = null, currentProduct = null;
+const cartState = {
+  items: [],
+  totalItems: 0,
+  totalPrice: 0
+};
+let currentUser = null;
+let currentProduct = null;
 
 // =============== INITIALIZE ===============
 document.addEventListener('DOMContentLoaded', () => {
-  setupHero(); setupProducts(); setupCart(); setupAuth(); loadUser();
-  let currentUser = JSON.parse(localStorage.getItem('anastasia_current_user'))  || null;
+  // Φόρτωση χρήστη από localStorage
+  loadUser();
 
-const authBtn = document.getElementById('auth-btn');
+  setupHero();
+  setupProducts();
+  setupCart();
+  setupAuth();
 
-function updateAuthBtn() {
-  authBtn.textContent = currentUser ? currentUser.username : 'Σύνδεση/Εγγραφή';
-}
-
-authBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-
-  if (currentUser) {
-    localStorage.removeItem('anastasia_current_user');
-    currentUser = null;
-    updateAuthBtn();
-  } else {
-    openAuthPopup('login');
+  // Κουμπί auth στο header (αν υπάρχει)
+  const authBtn = document.getElementById('auth-btn');
+  if (authBtn) {
+    authBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (currentUser) {
+        logout();
+      } else {
+        openAuthPopup('login');
+      }
+    });
+    updateAuthUI(); // αρχική ενημέρωση
   }
-});
 
-updateAuthBtn();
-
+  // Κλείσιμο pop-up με Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllPopups();
+  });
 });
 
 // =============== HERO SECTION ===============
@@ -34,9 +42,15 @@ function setupHero() {
   document.querySelectorAll('.hero-btn').forEach(button => {
     button.addEventListener('click', (e) => {
       e.preventDefault();
-      if (button.classList.contains('btn-register')) openAuthPopup('register');
-      else if (button.classList.contains('btn-continue')) openAuthPopup('login');
-      else if (button.classList.contains('btn-products')) {
+      if (button.classList.contains('btn-register')) {
+        openAuthPopup('register');
+      } else if (button.classList.contains('btn-continue')) {
+        if (currentUser) {
+          alert(`Είστε συνδεδεμένος ως ${currentUser.username}`);
+        } else {
+          openAuthPopup('login');
+        }
+      } else if (button.classList.contains('btn-products')) {
         const intro = document.getElementById('intro-overlay');
         const main = document.querySelector('main');
         if (intro) intro.classList.add('intro-hide');
@@ -52,10 +66,9 @@ function setupHero() {
 
 // =============== PRODUCTS ===============
 function setupProducts() {
-  // Category filters
   const filterButtons = document.querySelectorAll('.filter-btn');
   const productCards = document.querySelectorAll('.product-card');
-  
+
   filterButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       filterButtons.forEach(b => b.classList.remove('active'));
@@ -67,14 +80,15 @@ function setupProducts() {
       });
     });
   });
-  
-  // Product click opens details
+
   productCards.forEach(card => {
     card.addEventListener('click', () => openProductDetailsPopup(card));
   });
 }
 
 function openProductDetailsPopup(productCard) {
+  closeAllPopups(); // κλείνει ό,τι είναι ανοιχτό
+
   currentProduct = {
     id: productCard.dataset.sku || 'AF-' + Date.now(),
     name: productCard.querySelector('h3').textContent,
@@ -82,7 +96,7 @@ function openProductDetailsPopup(productCard) {
     image: productCard.querySelector('img').src,
     desc: productCard.dataset.desc || 'Premium προϊόν υψηλής ποιότητας.'
   };
-  
+
   const popupHTML = `
     <div class="cart-overlay active" id="product-overlay"></div>
     <div class="cart-popup active" id="product-popup" style="max-width: 900px;">
@@ -119,19 +133,19 @@ function openProductDetailsPopup(productCard) {
         </div>
       </div>
     </div>`;
-  
+
   const container = document.createElement('div');
   container.innerHTML = popupHTML;
   document.body.appendChild(container);
-  
+  document.body.style.overflow = 'hidden';
+
+  // Ενεργοποίηση επιλογής μεγέθους
   container.querySelectorAll('.size-option').forEach(btn => {
     btn.addEventListener('click', () => {
       container.querySelectorAll('.size-option').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     });
   });
-  
-  document.body.style.overflow = 'hidden';
 }
 
 function updateQuantity(change) {
@@ -144,23 +158,23 @@ function updateQuantity(change) {
 
 function closeProductPopup() {
   document.querySelectorAll('#product-overlay, #product-popup').forEach(el => el.remove());
-  document.body.style.overflow = ''; currentProduct = null;
+  document.body.style.overflow = '';
+  currentProduct = null;
 }
 
 // =============== CART SYSTEM ===============
 function setupCart() {
   const cartIcon = document.getElementById('cart-icon');
   if (cartIcon) cartIcon.addEventListener('click', openCartPopup);
-  
+
+  // Κλείσιμο pop-up με κλικ έξω ή στο κουμπί κλεισίματος
   document.addEventListener('click', (e) => {
     if (e.target.classList.contains('cart-close') || e.target.closest('.cart-close') || e.target.classList.contains('cart-overlay')) {
       closeAllPopups();
     }
   });
-  
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAllPopups(); });
-  
-  // Προσθήκη event listener για το checkout button (αν υπάρχει)
+
+  // Checkout button
   const checkoutBtn = document.getElementById('checkout-btn');
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', () => {
@@ -168,9 +182,11 @@ function setupCart() {
         alert('Το καλάθι σου είναι άδειο!');
         return;
       }
-      showOrderConfirmation(); // ΔΙΟΡΘΩΣΗ: ΠΡΟΣΘΗΚΗ ΚΛΗΣΗΣ ΤΗΣ ΣΥΝΑΡΤΗΣΗΣ
+      showOrderConfirmation();
     });
   }
+
+  updateCartBadge();
 }
 
 function openCartPopup() {
@@ -185,7 +201,12 @@ function openCartPopup() {
 }
 
 function closeAllPopups() {
-  document.querySelectorAll('.cart-overlay, .cart-popup').forEach(el => el.classList.remove('active'));
+  // Στατικά pop-up (cart) – απλά κρύβονται
+  document.querySelectorAll('#cart-overlay, #cart-popup').forEach(el => {
+    if (el) el.classList.remove('active');
+  });
+  // Δυναμικά pop-up (product, auth) – αφαιρούνται από το DOM
+  document.querySelectorAll('#product-overlay, #product-popup, .auth-overlay, .auth-popup').forEach(el => el.remove());
   document.body.style.overflow = '';
 }
 
@@ -198,7 +219,7 @@ function updateCartPopup() {
   const cartItems = document.getElementById('cart-items');
   const cartTotal = document.getElementById('cart-total');
   if (!cartItems) return;
-  
+
   if (cartState.items.length === 0) {
     cartItems.innerHTML = `<div style="text-align: center; padding: 60px 20px; color: #888;">
       <i class="fa-solid fa-cart-arrow-down" style="font-size: 48px; opacity: 0.3; margin-bottom: 20px;"></i>
@@ -207,18 +228,23 @@ function updateCartPopup() {
     cartItems.innerHTML = cartState.items.map(item => `
       <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f9f9f9; border-radius: 10px; margin-bottom: 10px;">
         <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
-        <div style="flex: 1;"><div style="font-weight: bold;">${item.name}</div><div>${item.price.toFixed(2)} € × ${item.quantity}</div></div>
+        <div style="flex: 1;">
+          <div style="font-weight: bold;">${item.name}</div>
+          <div>${item.price.toFixed(2)} € × ${item.quantity}</div>
+        </div>
         <div style="font-weight: bold; color: var(--accent);">${item.total.toFixed(2)} €</div>
         <button onclick="removeFromCart('${item.id}')" style="background: none; border: none; color: #ff4444; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>
       </div>`).join('');
   }
-  
+
   if (cartTotal) cartTotal.textContent = cartState.totalPrice.toFixed(2).replace('.', ',') + ' €';
 }
 
 function removeFromCart(itemId) {
   cartState.items = cartState.items.filter(item => item.id !== itemId);
-  updateCartTotals(); updateCartBadge(); updateCartPopup();
+  updateCartTotals();
+  updateCartBadge();
+  updateCartPopup();
 }
 
 function updateCartBadge() {
@@ -228,21 +254,91 @@ function updateCartBadge() {
   cartCount.style.display = cartState.totalItems > 0 ? 'inline-flex' : 'none';
 }
 
-// =============== AUTH SYSTEM ===============
-function setupAuth() {
-  document.querySelectorAll('.btn-continue, .btn-register').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (btn.classList.contains('btn-continue') && currentUser) {
-        alert(`Είστε συνδεδεμένος ως ${currentUser.username}`); return;
-      }
-      openAuthPopup(btn.classList.contains('btn-continue') ? 'login' : 'register');
+// =============== CART ANIMATION & ADD TO CART ===============
+function addCurrentProductToCart() {
+  if (!currentProduct) return;
+  const qty = parseInt(document.getElementById('product-qty')?.textContent) || 1;
+  const size = document.querySelector('.size-option.active')?.dataset.size || 'M';
+
+  const itemId = `${currentProduct.id}_${size}`;
+  const existing = cartState.items.find(item => item.id === itemId);
+
+  if (existing) {
+    existing.quantity += qty;
+    existing.total = existing.price * existing.quantity;
+  } else {
+    cartState.items.push({
+      id: itemId,
+      name: `${currentProduct.name} (${size})`,
+      price: currentProduct.price,
+      image: currentProduct.image,
+      quantity: qty,
+      total: currentProduct.price * qty
     });
+  }
+
+  updateCartTotals();
+  updateCartBadge();
+
+  // Μικρό animation
+  const cart = document.getElementById('cart-icon');
+  if (cart) {
+    cart.classList.add('cart-pulse');
+    setTimeout(() => cart.classList.remove('cart-pulse'), 300);
+  }
+
+  setTimeout(closeProductPopup, 200);
+}
+
+// =============== AUTH SYSTEM (localStorage mock) ===============
+function setupAuth() {
+  // Ο χειρισμός γίνεται κυρίως μέσω των hero buttons και του auth-btn
+  // Δεν χρειάζεται επιπλέον listeners εδώ, όλα καλύπτονται από setupHero και τον authBtn
+}
+
+function loadUser() {
+  const stored = localStorage.getItem('anastasia_current_user');
+  if (stored) {
+    try {
+      currentUser = JSON.parse(stored);
+    } catch (e) {
+      currentUser = null;
+    }
+  } else {
+    currentUser = null;
+  }
+  updateAuthUI();
+}
+
+function saveUser() {
+  if (currentUser) {
+    localStorage.setItem('anastasia_current_user', JSON.stringify(currentUser));
+  } else {
+    localStorage.removeItem('anastasia_current_user');
+  }
+}
+
+function updateAuthUI() {
+  // Κουμπί στο header
+  const authBtn = document.getElementById('auth-btn');
+  if (authBtn) {
+    authBtn.textContent = currentUser ? currentUser.username : 'Σύνδεση/Εγγραφή';
+  }
+
+  // Κουμπί "Συνέχεια" στο hero
+  document.querySelectorAll('.btn-continue').forEach(btn => {
+    if (currentUser) {
+      btn.innerHTML = `<i class="fa-solid fa-user"></i> ${currentUser.username}`;
+      btn.classList.add('logged-in');
+    } else {
+      btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i>Σύνδεση/Εγγραφή`;
+      btn.classList.remove('logged-in');
+    }
   });
 }
 
 function openAuthPopup(type) {
-  closeAllPopups();
+  closeAllPopups(); // αφαιρεί τυχόν ανοιχτά auth/product pop-up
 
   const formHTML = `
     <div class="cart-overlay active auth-overlay"></div>
@@ -288,37 +384,100 @@ function openAuthPopup(type) {
 
   const overlay = container.querySelector('.auth-overlay');
   const popup = container.querySelector('.auth-popup');
-  const closeBtn = container.querySelector('.cart-close');
 
-  // ⛔ stop bubbling ΜΟΝΟ μέσα στο popup
+  // Αποτροπή κλεισίματος όταν γίνεται κλικ μέσα στο pop-up
   popup.addEventListener('click', e => e.stopPropagation());
 
-  // ✅ click έξω κλείνει
+  // Κλείσιμο με overlay ή κουμπί X
   overlay.addEventListener('click', closeAllPopups);
-  closeBtn.addEventListener('click', closeAllPopups);
+  container.querySelector('.cart-close').addEventListener('click', closeAllPopups);
 
-  // buttons
+  // Σύνδεση / Εγγραφή
   container.querySelector('#login-btn')?.addEventListener('click', handleLogin);
   container.querySelector('#register-btn')?.addEventListener('click', handleRegister);
 
-  container.querySelector('#switch-register')?.addEventListener('click', e => {
+  // Εναλλαγή μεταξύ login/register
+  container.querySelector('#switch-register')?.addEventListener('click', (e) => {
     e.preventDefault();
     openAuthPopup('register');
   });
-
-  container.querySelector('#switch-login')?.addEventListener('click', e => {
+  container.querySelector('#switch-login')?.addEventListener('click', (e) => {
     e.preventDefault();
     openAuthPopup('login');
   });
 }
 
+// ---------- Mock Authentication με localStorage ----------
+function getUsers() {
+  const users = localStorage.getItem('anastasia_users');
+  return users ? JSON.parse(users) : [];
+}
 
+function saveUsers(users) {
+  localStorage.setItem('anastasia_users', JSON.stringify(users));
+}
 
+function handleRegister() {
+  const username = document.getElementById('reg-username')?.value.trim();
+  const password = document.getElementById('reg-password')?.value;
+  const confirm = document.getElementById('reg-confirm-password')?.value;
 
+  if (!username || !password || !confirm) {
+    alert('Συμπλήρωσε όλα τα πεδία');
+    return;
+  }
+  if (password !== confirm) {
+    alert('Οι κωδικοί δεν ταιριάζουν');
+    return;
+  }
 
+  const users = getUsers();
+  if (users.find(u => u.username === username)) {
+    alert('Το όνομα χρήστη υπάρχει ήδη');
+    return;
+  }
 
+  users.push({ username, password }); // αποθήκευση απλού κωδικού (μόνο για demo)
+  saveUsers(users);
 
+  // Αυτόματη σύνδεση μετά την εγγραφή
+  currentUser = { username, password };
+  saveUser();
+  updateAuthUI();
+  closeAllPopups();
+  alert('Επιτυχής εγγραφή και σύνδεση!');
+}
 
+function handleLogin() {
+  const username = document.getElementById('login-username')?.value.trim();
+  const password = document.getElementById('login-password')?.value;
+
+  if (!username || !password) {
+    alert('Συμπλήρωσε όλα τα πεδία');
+    return;
+  }
+
+  const users = getUsers();
+  const user = users.find(u => u.username === username && u.password === password);
+  if (!user) {
+    alert('Λάθος όνομα χρήστη ή κωδικός');
+    return;
+  }
+
+  currentUser = { username: user.username, password: user.password };
+  saveUser();
+  updateAuthUI();
+  closeAllPopups();
+  alert(`Καλώς ήρθες, ${username}!`);
+}
+
+function logout() {
+  currentUser = null;
+  saveUser();
+  updateAuthUI();
+  closeAllPopups();
+  alert('Αποσυνδεθήκατε επιτυχώς');
+}
 
 // =============== ORDER CONFIRMATION ===============
 function showOrderConfirmation() {
@@ -326,145 +485,83 @@ function showOrderConfirmation() {
     alert('Το καλάθι σου είναι άδειο!');
     return;
   }
-  
-  const userName = currentUser?.username || 'φίλε';
-  
-  const popupHTML = `
-    <div class="cart-overlay active"></div>
-    <div class="cart-popup active">
+
+  closeAllPopups(); // ΠΟΛΥ σημαντικό
+
+  const userName = currentUser?.email || 'φίλε';
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = `
+    <div class="cart-overlay active order-overlay"></div>
+    <div class="cart-popup active order-popup">
       <div class="cart-popup-header">
         <h3><i class="fa-solid fa-check-circle"></i> Επιτυχής Παραγγελία!</h3>
-        <button class="cart-close" onclick="closeAllPopups()"><i class="fa-solid fa-xmark"></i></button>
+        <button class="cart-close order-close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
+
       <div class="order-confirmation">
         <i class="fa-solid fa-check-circle"></i>
         <h4>Ευχαριστούμε ${userName}!</h4>
         <p>Η παραγγελία σας επιβεβαιώθηκε με επιτυχία.</p>
-        <p>Θα σας ενημερώσουμε για την εξέλιξή της πολύ σύντομα.</p>
+        <p>Θα σας ενημερώσουμε για την εξέλιξή της σύντομα.</p>
         <p style="margin-top: 20px; font-size: 14px; color: #888;">
-          Αριθμός Παραγγελίας: <strong>AF-${Date.now().toString().slice(-6)}</strong>
+          Αριθμός Παραγγελίας:
+          <strong>AF-${Date.now().toString().slice(-6)}</strong>
         </p>
       </div>
+
       <div class="cart-popup-footer">
-        <button class="cart-checkout" onclick="closeAllPopups(); cartState.items = []; updateCartBadge();">
+        <button class="cart-checkout order-ok">
           <i class="fa-solid fa-check"></i> ΟΚ
         </button>
       </div>
-    </div>`;
-  
-  const container = document.createElement('div');
-  container.innerHTML = popupHTML;
-  document.body.appendChild(container);
-  document.body.style.overflow = 'hidden';
-  
-  // Αδειάζουμε το καλάθι
-  cartState.items = [];
-  updateCartBadge();
-  updateCartTotals();
-}
+    </div>
+  `;
 
-// =============== CART ANIMATION ===============
-function addCurrentProductToCart() {
-  if (!currentProduct) return;
-  const qty = parseInt(document.getElementById('product-qty')?.textContent) || 1;
-  const size = document.querySelector('.size-option.active')?.dataset.size || 'M';
-  
-  console.log("Προσθήκη:", currentProduct.id, "Μέγεθος:", size);
-  
-  const itemId = `${currentProduct.id}_${size}`;
-  const existing = cartState.items.find(item => item.id === itemId);
-  
-  if (existing) {
-    existing.quantity += qty;
-    existing.total = existing.price * existing.quantity;
-    console.log("Υπήρχε - Νέα ποσότητα:", existing.quantity);
-  } else {
-    cartState.items.push({
-      id: itemId, name: `${currentProduct.name} (${size})`,
-      price: currentProduct.price, image: currentProduct.image,
-      quantity: qty, total: currentProduct.price * qty
-    });
-    console.log("Νέο προϊόν - ID:", itemId);
-  }
-  
-  console.log("Cart State:", cartState.items);
-  
-  updateCartTotals(); 
-  updateCartBadge();
-  
-  // Minimal animation
-  const cart = document.getElementById('cart-icon');
-  if (cart) {
-    cart.classList.add('cart-pulse');
-    setTimeout(() => cart.classList.remove('cart-pulse'), 300);
-  }
-  setTimeout(closeProductPopup, 200);
-}
-// =============== UPDATE AUTH UI ===============
-function updateAuthUI() {
-  const authButtons = document.querySelectorAll('.btn-continue');
-  authButtons.forEach(btn => {
-    if (currentUser) {
-      btn.innerHTML = `<i class="fa-solid fa-user"></i> ${currentUser.username}`;
-      btn.classList.add('logged-in');
-    } else {
-      btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> Συνέχεια`;
-      btn.classList.remove('logged-in');
-    }
+  document.body.appendChild(wrapper);
+  document.body.style.overflow = 'hidden';
+
+  // ✅ Event listeners
+  wrapper.querySelector('.order-close').addEventListener('click', () => {
+    wrapper.remove();
+    document.body.style.overflow = '';
+  });
+
+  wrapper.querySelector('.order-ok').addEventListener('click', () => {
+    cartState.items = [];
+    updateCartTotals();
+    updateCartBadge();
+    wrapper.remove();
+    document.body.style.overflow = '';
+  });
+
+  wrapper.querySelector('.order-overlay').addEventListener('click', () => {
+    wrapper.remove();
+    document.body.style.overflow = '';
   });
 }
-// ================= FIREBASE AUTH =================
+document.addEventListener("click", function (e) {
+  if (e.target.matches("#product-popup img")) {
+    e.target.classList.toggle("zoomed");
+  }
+});
 
-async function handleRegister() {
-  const email = document.getElementById('reg-username')?.value;
-  const password = document.getElementById('reg-password')?.value;
-  const confirm = document.getElementById('reg-confirm-password')?.value;
+const overlay = document.getElementById("imageOverlay");
+const overlayImg = document.getElementById("overlayImg");
 
-  if (!email || !password || !confirm) {
-    alert('Συμπλήρωσε όλα τα πεδία');
-    return;
+document.addEventListener("click", function (e) {
+
+  // ανοίγει overlay
+  if (e.target.matches("#product-popup img")) {
+    overlayImg.src = e.target.src;
+    overlay.classList.add("active");
   }
 
-  if (password !== confirm) {
-    alert('Οι κωδικοί δεν ταιριάζουν');
-    return;
+  // κλείνει overlay
+  if (e.target.matches("#imageOverlay")) {
+    overlay.classList.remove("active");
   }
 
-  try {
-    await firebaseServices.createUserWithEmailAndPassword(
-      firebaseServices.auth,
-      email,
-      password
-    );
-
-    closeAllPopups();
-  } catch (error) {
-    alert(error.message);
-  }
-}
-
-async function handleLogin() {
-  const email = document.getElementById('login-username')?.value;
-  const password = document.getElementById('login-password')?.value;
-
-  if (!email || !password) {
-    alert('Συμπλήρωσε όλα τα πεδία');
-    return;
-  }
-
-  try {
-    await firebaseServices.signInWithEmailAndPassword(
-      firebaseServices.auth,
-      email,
-      password
-    );
-
-    closeAllPopups();
-  } catch (error) {
-    alert(error.message);
-  }
-}
-
-function logout() {
-  firebaseServices.signOut(firebaseServices.auth);
-}
+});
