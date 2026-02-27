@@ -87,7 +87,7 @@ function setupProducts() {
 }
 
 function openProductDetailsPopup(productCard) {
-  closeAllPopups(); // κλείνει ό,τι είναι ανοιχτό
+  closeAllPopups();
 
   currentProduct = {
     id: productCard.dataset.sku || 'AF-' + Date.now(),
@@ -99,35 +99,42 @@ function openProductDetailsPopup(productCard) {
 
   const popupHTML = `
     <div class="cart-overlay active" id="product-overlay"></div>
-    <div class="cart-popup active" id="product-popup" style="max-width: 900px;">
+    <div class="cart-popup active product-popup" id="product-popup">
       <div class="cart-popup-header">
         <h3><i class="fa-solid fa-info-circle"></i> Λεπτομέρειες Προϊόντος</h3>
         <button class="cart-close" onclick="closeProductPopup()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 30px;">
-        <div><img src="${currentProduct.image}" alt="${currentProduct.name}" style="width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"></div>
-        <div>
-          <h2 style="font-size: 24px; margin-bottom: 10px;">${currentProduct.name}</h2>
-          <div style="font-size: 28px; color: var(--accent); font-weight: bold; margin: 20px 0;">${currentProduct.price.toFixed(2).replace('.', ',')} €</div>
-          <p style="color: #555; line-height: 1.6; margin-bottom: 30px;">${currentProduct.desc}</p>
-          <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px;">Μέγεθος:</h4>
-            <div style="display: flex; gap: 10px;">
+      
+      <div class="product-popup-content">
+        <div class="product-popup-image">
+          <img src="${currentProduct.image}" alt="${currentProduct.name}">
+        </div>
+        
+        <div class="product-popup-details">
+          <h2 class="product-popup-title">${currentProduct.name}</h2>
+          <div class="product-popup-price">${currentProduct.price.toFixed(2).replace('.', ',')} €</div>
+          <p class="product-popup-desc">${currentProduct.desc}</p>
+          
+          <div class="product-popup-section">
+            <h4>Μέγεθος:</h4>
+            <div class="size-options">
               <button class="size-option" data-size="S">S</button>
               <button class="size-option active" data-size="M">M</button>
               <button class="size-option" data-size="L">L</button>
               <button class="size-option" data-size="XL">XL</button>
             </div>
           </div>
-          <div style="margin-bottom: 30px;">
-            <h4 style="margin-bottom: 10px;">Ποσότητα:</h4>
-            <div style="display: flex; align-items: center; gap: 15px;">
+          
+          <div class="product-popup-section">
+            <h4>Ποσότητα:</h4>
+            <div class="quantity-control">
               <button onclick="updateQuantity(-1)">−</button>
-              <span id="product-qty" style="font-size: 20px; font-weight: bold;">1</span>
+              <span id="product-qty">1</span>
               <button onclick="updateQuantity(1)">+</button>
             </div>
           </div>
-          <button onclick="addCurrentProductToCart()" style="width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          
+          <button onclick="addCurrentProductToCart()" class="add-to-cart-btn">
             <i class="fa-solid fa-cart-plus"></i> Προσθήκη στο καλάθι - ${currentProduct.price.toFixed(2).replace('.', ',')} €
           </button>
         </div>
@@ -139,7 +146,6 @@ function openProductDetailsPopup(productCard) {
   document.body.appendChild(container);
   document.body.style.overflow = 'hidden';
 
-  // Ενεργοποίηση επιλογής μεγέθους
   container.querySelectorAll('.size-option').forEach(btn => {
     btn.addEventListener('click', () => {
       container.querySelectorAll('.size-option').forEach(b => b.classList.remove('active'));
@@ -147,7 +153,6 @@ function openProductDetailsPopup(productCard) {
     });
   });
 }
-
 function updateQuantity(change) {
   const qtyElement = document.getElementById('product-qty');
   if (!qtyElement) return;
@@ -542,11 +547,6 @@ function showOrderConfirmation() {
     document.body.style.overflow = '';
   });
 }
-document.addEventListener("click", function (e) {
-  if (e.target.matches("#product-popup img")) {
-    e.target.classList.toggle("zoomed");
-  }
-});
 
 const overlay = document.getElementById("imageOverlay");
 const overlayImg = document.getElementById("overlayImg");

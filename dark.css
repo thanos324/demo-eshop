@@ -1,0 +1,43 @@
+/* DARK MODE VARIABLES */
+body.dark-mode {
+  --text-main: #f5f5f5;
+  --text-muted: #b0b0b0;
+  --bg-page: #121212;
+  --card-bg: #1e1e1e;
+  --accent: #ff8a65;
+  --accent-soft: #2a2a2a;
+  --accent-dark: #ff7043;
+}
+
+/* Global background */
+body.dark-mode {
+  background: linear-gradient(170deg, #121212, #1a1a1a);
+}
+
+/* Header */
+body.dark-mode header {
+  background: rgba(20, 20, 20, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Footer */
+body.dark-mode footer {
+  background: #111;
+  color: #aaa;
+}
+
+/* Cards */
+body.dark-mode .product-card {
+  background: #1e1e1e;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Popups */
+body.dark-mode .cart-popup {
+  background: #1e1e1e;
+}
+
+body.dark-mode .cart-popup-header,
+body.dark-mode .cart-popup-footer {
+  background: #181818;
+}
