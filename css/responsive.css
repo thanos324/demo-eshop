@@ -130,3 +130,18 @@
   }
 
 }
+@media (min-width: 992px) {
+  .product-popup {
+    max-width: 900px;
+  }
+
+  .product-popup-content {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .product-popup-image,
+  .product-popup-details {
+    width: 50%;
+  }
+}

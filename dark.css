@@ -1,43 +1,275 @@
-/* DARK MODE VARIABLES */
+/* DARK MODE VARIABLES - SOFT & EYECARE EDITION */
 body.dark-mode {
-  --text-main: #f5f5f5;
-  --text-muted: #b0b0b0;
-  --bg-page: #121212;
-  --card-bg: #1e1e1e;
-  --accent: #ff8a65;
-  --accent-soft: #2a2a2a;
-  --accent-dark: #ff7043;
+  --text-main: #ffffff;           /* Καθαρό λευκό για μέγιστη ευκρίνεια */
+  --text-muted: #c0c0c0;          /* Πιο ανοιχτό γκρι για καλύτερη αντίθεση */
+  --bg-page: #2b2b2b;             /* Απαλό σκούρο γκρι, όχι μαύρο */
+  --card-bg: #333333;              /* Πιο ανοιχτό για αντίθεση */
+  --accent: #ffa726;               /* Πιο ζωντανό πορτοκαλί για καλύτερη ορατότητα */
+  --accent-soft: #404040;          /* Πιο ανοιχτό για δευτερεύοντα */
+  --accent-dark: #f57c00;          /* Πιο σκούρο accent */
+  --border-light: rgba(255, 255, 255, 0.1); /* Πιο ορατό border */
 }
 
-/* Global background */
+/* Global background - Ομοιόμορφο, χωρίς έντονες κλίσεις */
 body.dark-mode {
-  background: linear-gradient(170deg, #121212, #1a1a1a);
+  background: #2b2b2b;
 }
 
-/* Header */
+/* Header - Πιο σταθερό */
 body.dark-mode header {
-  background: rgba(20, 20, 20, 0.7);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(55, 55, 55, 0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Footer */
 body.dark-mode footer {
-  background: #111;
-  color: #aaa;
+  background: #262626;
+  color: #c0c0c0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Cards */
+/* Cards - Με καθαρή αντίθεση */
 body.dark-mode .product-card {
-  background: #1e1e1e;
-  border: 1px solid rgba(255,255,255,0.05);
+  background: #333333;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .product-card:hover {
+  background: #3a3a3a;
+  border-color: rgba(255, 167, 38, 0.3);
 }
 
 /* Popups */
 body.dark-mode .cart-popup {
-  background: #1e1e1e;
+  background: #333333;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-mode .cart-popup-header,
 body.dark-mode .cart-popup-footer {
-  background: #181818;
+  background: #2e2e2e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Buttons - Με καλή αντίθεση */
+body.dark-mode button:not(.clear-btn):not(.checkout-btn) {
+  background: #404040;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-weight: 500;
+}
+
+body.dark-mode button:not(.clear-btn):not(.checkout-btn):hover {
+  background: #4a4a4a;
+  border-color: rgba(255, 167, 38, 0.4);
+}
+
+body.dark-mode .clear-btn {
+  background: #333333;
+  color: #ffa726;
+  border: 1px solid rgba(255, 167, 38, 0.3);
+  font-weight: 500;
+}
+
+body.dark-mode .clear-btn:hover {
+  background: #3d3d3d;
+  border-color: rgba(255, 167, 38, 0.5);
+}
+
+body.dark-mode .checkout-btn {
+  background: #ffa726;
+  color: #1a1a1a;
+  font-weight: 600;
+  border: none;
+}
+
+body.dark-mode .checkout-btn:hover {
+  background: #ffb74d;
+  box-shadow: 0 4px 12px rgba(255, 167, 38, 0.25);
+}
+
+/* Form elements - Καθαρά και ευανάγνωστα */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #3a3a3a;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #a0a0a0;
+  opacity: 1;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+  border-color: #ffa726;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 167, 38, 0.15);
+  background: #404040;
+}
+
+/* Links - Καθαροί και ευκρινείς */
+body.dark-mode a {
+  color: #ffb74d;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+body.dark-mode a:hover {
+  color: #ffa726;
+  text-decoration: underline;
+}
+
+/* Text elements - Βελτιωμένη ευκρίνεια */
+body.dark-mode p,
+body.dark-mode li,
+body.dark-mode span:not(.product-price) {
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+body.dark-mode .product-price {
+  color: #ffb74d;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+/* Product title - Ιδιαίτερη προσοχή για ευκρίνεια */
+body.dark-mode .product-title,
+body.dark-mode .product-name {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.1em;
+  line-height: 1.4;
+}
+
+/* Scrollbar - Πιο απαλό */
+body.dark-mode ::-webkit-scrollbar {
+  width: 14px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+  background: #2b2b2b;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #555555;
+  border-radius: 7px;
+  border: 3px solid #2b2b2b;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #666666;
+}
+
+/* Cart items - Βελτιωμένη αντίθεση */
+body.dark-mode .cart-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px 0;
+}
+
+body.dark-mode .cart-item-title {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+body.dark-mode .cart-item-price {
+  color: #ffb74d;
+  font-weight: 600;
+}
+
+/* Quantity controls - Πιο ευκρινή */
+body.dark-mode .quantity-btn {
+  background: #404040;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.dark-mode .quantity-btn:hover {
+  background: #4a4a4a;
+  border-color: #ffa726;
+}
+
+body.dark-mode .quantity-display {
+  color: #ffffff;
+  font-weight: 600;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Total price - Έντονο αλλά καθαρό */
+body.dark-mode .cart-total {
+  color: #ffb74d;
+  font-weight: 700;
+  font-size: 1.3em;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+  padding-top: 15px;
+}
+
+body.dark-mode .product-popup {
+  background: #2b2b2b;
+}
+
+body.dark-mode .product-popup-image {
+  background: #2b2b2b;
+}
+
+body.dark-mode .product-popup-details {
+  background: #2b2b2b;
+}
+
+body.dark-mode .cart-popup-header,
+body.dark-mode .cart-popup-footer {
+  background: #2b2b2b;
+}
+/* Cart total box */
+body.dark-mode .cart-total {
+  background: #2a2a2a;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: none;
+}
+
+/* Κείμενο σύνολο */
+body.dark-mode .cart-total span {
+  color: #eee;
+}
+
+/* Άδειο καλάθι icon + text */
+body.dark-mode .cart-empty {
+  color: #bbb;
+}
+
+body.dark-mode .cart-empty i {
+  color: var(--accent);
+  opacity: 0.6;
 }
