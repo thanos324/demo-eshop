@@ -159,6 +159,7 @@ function updateQuantity(change) {
   let current = parseInt(qtyElement.textContent) || 1;
   current = Math.max(1, Math.min(10, current + change));
   qtyElement.textContent = current;
+  updateAddToCartButtonPrice();
 }
 
 function closeProductPopup() {
@@ -167,6 +168,17 @@ function closeProductPopup() {
   currentProduct = null;
 }
 
+function updateAddToCartButtonPrice() {
+  const qtyElement = document.getElementById('product-qty');
+  const addButton = document.querySelector('.add-to-cart-btn');
+  
+  if (!qtyElement || !addButton || !currentProduct) return;
+  
+  const quantity = parseInt(qtyElement.textContent) || 1;
+  const totalPrice = currentProduct.price * quantity;
+  
+  addButton.innerHTML = `<i class="fa-solid fa-cart-plus"></i> Προσθήκη στο καλάθι - ${totalPrice.toFixed(2).replace('.', ',')} €`;
+}
 // =============== CART SYSTEM ===============
 function setupCart() {
   const cartIcon = document.getElementById('cart-icon');
